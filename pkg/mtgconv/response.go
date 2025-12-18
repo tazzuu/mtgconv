@@ -60,6 +60,12 @@ type DeckResponse struct {
 	IncludeSignatureSpellsInPrice bool `json:"includeSignatureSpellsInPrice"`
 
 	Media []any `json:"media"`
+
+	CommandersCount int `json:"commandersCount"`
+	Commanders map[string]DeckEntry `json:"commanders"`
+
+	SideboardCount int `json:"sideboardCount"`
+	Sideboard map[string]DeckEntry `json:"sideboard"`
 }
 
 type User struct {

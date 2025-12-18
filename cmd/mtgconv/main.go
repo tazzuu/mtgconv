@@ -1,19 +1,18 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"log/slog"
-	// "os"
-
-	"mtgconv/pkg/mtgconv"
-)
-
+// main cli entrypoint for the program
 // USAGE:
 // go run cmd/mtgconv/*.go --user-agent "$MOXKEY" https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ
 // https://api.moxfield.com/v2/decks/all/1RAZHbA3H0WE7EHFK36-_Q
 //
 
+import (
+	"fmt"
+	"log"
+	"log/slog"
+
+	"mtgconv/pkg/mtgconv"
+)
 
 // overwrite this at build time ;
 // -ldflags="-X 'main.Version=someversion'"
@@ -64,14 +63,15 @@ func main() {
 	// fetch the JSON query result
 	jsonStr, err := mtgconv.FetchJSON(deckAPIUrl, config.UserAgent)
 	if err != nil {
-		// fmt.Fprintln(os.Stderr, err)
-		// os.Exit(1)
 		log.Fatalf("error while getting the API query result: %v", err)
 	}
 	slog.Debug("got API query result")
 
 	// convert the JSON string into Go objects
 	deck := mtgconv.MakeMoxfieldDeckResponse(jsonStr)
-	fmt.Println(deck.Authors)
+	// fmt.Println(deck.Authors)
+
+	dckFormat := mtgconv.MoxfieldDeckToDckFormat(deck)
+	fmt.Println(dckFormat)
 
 }

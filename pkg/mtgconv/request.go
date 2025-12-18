@@ -11,8 +11,6 @@ import (
 	"path"
 )
 
-var apiBaseUrl string = "https://api.moxfield.com/v2/decks/all"
-
 func MakeAPIUrl(deckID string) string {
 	u, _ := url.Parse(apiBaseUrl)
 	u.Path = path.Join(u.Path, deckID)

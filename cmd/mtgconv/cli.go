@@ -1,5 +1,7 @@
 package main
 
+// cli parsing logic for the program
+
 import (
 	"flag"
 	"fmt"
@@ -9,7 +11,7 @@ import (
 	"mtgconv/pkg/mtgconv"
 )
 
-// cli parsing logic for the program
+
 
 // cli parser logic goes here
 // USAGE:
