@@ -40,12 +40,14 @@ func main() {
 	}
 
 	// make sure we can connect to external resources and API's
+	slog.Debug("Checking API Conectivity")
 	err := CheckConnectivity()
 	if err != nil {
 		log.Fatalf("checking API connectivity: %v", err)
 	}
 
 	// get the deck ID from the provided URL
+	slog.Debug("getting the deck ID from the provided url", "url", config.UrlString)
 	deckID := deckIDFromURL(config.UrlString)
 	// create the API query URL
 	deckAPIUrl := makeAPIUrl(deckID)
