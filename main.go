@@ -25,7 +25,7 @@ var (
 func main() {
 	// get the cli args
 	config := parseCLI()
-	// debug := config.Debug
+	debug := config.Debug
 	verbose := config.Verbose
 
 	configureLogging(verbose)
@@ -33,10 +33,10 @@ func main() {
 
 
 	// if we are doing debug run that instead and quit
-	// if debug {
-	// 	DebugFunc(urlString, config)
-	// 	return
-	// }
+	if debug {
+		DebugFunc()
+		return
+	}
 
 	// make sure we can connect to external resources and API's
 	// err := CheckConnectivity()
@@ -44,17 +44,19 @@ func main() {
 	// 	log.Fatalf("checking API connectivity: %v", err)
 	// }
 
+	// get the deck ID from the provided URL
 	deckID := deckIDFromURL(config.UrlString)
+	// create the API query URL
 	deckAPIUrl := makeAPIUrl(deckID)
-
+	// fetch the JSON query result
 	jsonStr, err := fetchJSON(deckAPIUrl, config.UserAgent)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-
 	// fmt.Println(jsonStr)
 
+	// convert the JSON string into Go objects
 	var deck DeckResponse
 	if err := json.Unmarshal([]byte(jsonStr), &deck); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)
