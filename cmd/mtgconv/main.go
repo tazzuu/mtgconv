@@ -50,7 +50,12 @@ func main() {
 
 	// get the deck ID from the provided URL
 	slog.Debug("getting the deck ID from the provided url", "url", config.UrlString)
-	deckID := mtgconv.DeckIDFromURL(config.UrlString)
+	deckID, err := mtgconv.DeckIDFromURL(config.UrlString)
+	slog.Debug("got deck ID", "deckID", deckID)
+	if err != nil {
+		log.Fatalf("getting deck ID from URL: %v", err)
+	}
+
 	// create the API query URL
 	deckAPIUrl := mtgconv.MakeAPIUrl(deckID)
 	// fetch the JSON query result

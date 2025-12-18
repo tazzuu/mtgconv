@@ -12,6 +12,7 @@ func MakeMoxfieldDeckResponse (jsonStr string) DeckResponse {
 		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)
 		os.Exit(1)
 	}
+	deck.JsonStr = jsonStr
 	return deck
 }
 
@@ -29,7 +30,7 @@ type DeckResponse struct {
 	AreCommentsEnabled bool             `json:"areCommentsEnabled"`
 	IsShared           bool             `json:"isShared"`
 	AuthorsCanEdit     bool             `json:"authorsCanEdit"`
-	jsonStr string // the original JSON from the request response
+	JsonStr string // the original JSON from the request response
 
 	CreatedByUser User `json:"createdByUser"`
 	Authors       []User `json:"authors"`
