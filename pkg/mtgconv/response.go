@@ -1,4 +1,4 @@
-package main
+package mtgconv
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 )
 
-func makeMoxfieldDeckResponse (jsonStr string) DeckResponse {
+func MakeMoxfieldDeckResponse (jsonStr string) DeckResponse {
 	var deck DeckResponse
 	if err := json.Unmarshal([]byte(jsonStr), &deck); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)

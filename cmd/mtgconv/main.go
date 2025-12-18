@@ -5,10 +5,12 @@ import (
 	"log"
 	"log/slog"
 	"os"
+
+	"mtgconv/pkg/mtgconv"
 )
 
 // USAGE:
-// go run . --user-agent "$MOXKEY" https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ
+// go run cmd/mtgconv/*.go --user-agent "$MOXKEY" https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ
 // https://api.moxfield.com/v2/decks/all/1RAZHbA3H0WE7EHFK36-_Q
 //
 
@@ -28,31 +30,31 @@ func main() {
 	config := parseCLI()
 	debug := config.Debug
 	verbose := config.Verbose
-	configureLogging(verbose)
+	mtgconv.ConfigureLogging(verbose)
 
 
 
 	// if we are doing debug run that instead and quit
 	if debug {
 		slog.Debug("Running DebugFunc")
-		DebugFunc()
+		mtgconv.DebugFunc()
 		return
 	}
 
 	// make sure we can connect to external resources and API's
 	slog.Debug("Checking API Conectivity")
-	err := CheckConnectivity()
+	err := mtgconv.CheckConnectivity()
 	if err != nil {
 		log.Fatalf("checking API connectivity: %v", err)
 	}
 
 	// get the deck ID from the provided URL
 	slog.Debug("getting the deck ID from the provided url", "url", config.UrlString)
-	deckID := deckIDFromURL(config.UrlString)
+	deckID := mtgconv.DeckIDFromURL(config.UrlString)
 	// create the API query URL
-	deckAPIUrl := makeAPIUrl(deckID)
+	deckAPIUrl := mtgconv.MakeAPIUrl(deckID)
 	// fetch the JSON query result
-	jsonStr, err := fetchJSON(deckAPIUrl, config.UserAgent)
+	jsonStr, err := mtgconv.FetchJSON(deckAPIUrl, config.UserAgent)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -60,7 +62,7 @@ func main() {
 	// fmt.Println(jsonStr)
 
 	// convert the JSON string into Go objects
-	deck := makeMoxfieldDeckResponse(jsonStr)
+	deck := mtgconv.MakeMoxfieldDeckResponse(jsonStr)
 	fmt.Println(deck.Authors)
 
 }

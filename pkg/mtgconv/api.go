@@ -1,4 +1,4 @@
-package main
+package mtgconv
 
 func CheckConnectivity() error {
 	return nil

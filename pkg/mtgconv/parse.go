@@ -1,4 +1,4 @@
-package main
+package mtgconv
 
 import (
 	"net/url"
@@ -7,7 +7,7 @@ import (
 )
 
 // get the final part of the URL
-func deckIDFromURL(rawUrl string) string {
+func DeckIDFromURL(rawUrl string) string {
 	// rawUrl := "https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ"
 	u, err := url.Parse(rawUrl)
 	if err != nil {

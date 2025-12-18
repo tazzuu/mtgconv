@@ -1,4 +1,4 @@
-package main
+package mtgconv
 
 import (
 	"log/slog"
@@ -6,7 +6,7 @@ import (
 )
 
 // initialize internal logger
-func configureLogging (verbose bool) {
+func ConfigureLogging (verbose bool) {
 
 	// default log level is INFO
 	level := slog.LevelInfo

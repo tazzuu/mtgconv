@@ -1,4 +1,4 @@
-package main
+package mtgconv
 
 import (
 	"encoding/json"
@@ -13,13 +13,13 @@ import (
 
 var apiBaseUrl string = "https://api.moxfield.com/v2/decks/all"
 
-func makeAPIUrl(deckID string) string {
+func MakeAPIUrl(deckID string) string {
 	u, _ := url.Parse(apiBaseUrl)
 	u.Path = path.Join(u.Path, deckID)
 	return(u.String())
 }
 
-func fetchJSON(url string, userAgent string) (string, error) {
+func FetchJSON(url string, userAgent string) (string, error) {
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
