@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"log/slog"
 	"os"
-	"encoding/json"
 )
 
 // USAGE:
@@ -27,22 +28,22 @@ func main() {
 	config := parseCLI()
 	debug := config.Debug
 	verbose := config.Verbose
-
 	configureLogging(verbose)
 
 
 
 	// if we are doing debug run that instead and quit
 	if debug {
+		slog.Debug("Running DebugFunc")
 		DebugFunc()
 		return
 	}
 
 	// make sure we can connect to external resources and API's
-	// err := CheckConnectivity()
-	// if err != nil {
-	// 	log.Fatalf("checking API connectivity: %v", err)
-	// }
+	err := CheckConnectivity()
+	if err != nil {
+		log.Fatalf("checking API connectivity: %v", err)
+	}
 
 	// get the deck ID from the provided URL
 	deckID := deckIDFromURL(config.UrlString)
@@ -57,11 +58,7 @@ func main() {
 	// fmt.Println(jsonStr)
 
 	// convert the JSON string into Go objects
-	var deck DeckResponse
-	if err := json.Unmarshal([]byte(jsonStr), &deck); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)
-		os.Exit(1)
-	}
+	deck := makeMoxfieldDeckResponse(jsonStr)
 	fmt.Println(deck.Authors)
 
 }

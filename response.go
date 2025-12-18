@@ -1,5 +1,20 @@
 package main
 
+import (
+	"fmt"
+	"os"
+	"encoding/json"
+)
+
+func makeMoxfieldDeckResponse (jsonStr string) DeckResponse {
+	var deck DeckResponse
+	if err := json.Unmarshal([]byte(jsonStr), &deck); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)
+		os.Exit(1)
+	}
+	return deck
+}
+
 type DeckResponse struct {
 	ID                 string           `json:"id"`
 	Name               string           `json:"name"`
@@ -14,6 +29,7 @@ type DeckResponse struct {
 	AreCommentsEnabled bool             `json:"areCommentsEnabled"`
 	IsShared           bool             `json:"isShared"`
 	AuthorsCanEdit     bool             `json:"authorsCanEdit"`
+	jsonStr string // the original JSON from the request response
 
 	CreatedByUser User `json:"createdByUser"`
 	Authors       []User `json:"authors"`
