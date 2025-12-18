@@ -7,6 +7,7 @@ import (
 	"slices"
 )
 
+// convert the Moxfield JSON response object into a .dck decklist format
 func MoxfieldDeckToDckFormat(deck DeckResponse) string {
 	var result string = ""
 	var lines []string
