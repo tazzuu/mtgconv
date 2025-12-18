@@ -7,7 +7,7 @@ tidy:
 	go mod tidy
 
 # cli interface for the program
-SRC:=cmd/mgtconv/main.go
+SRC:=cmd/mtgconv/main.go
 
 
 test:
@@ -17,7 +17,7 @@ test:
 # need at least 1 tag for this to work
 GIT_TAG:=$(shell git describe --tags)
 # name of output binary file
-BIN:=mgtconv
+BIN:=mtgconv
 
 # compile for the current system
 build:
