@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
-	"os"
+	// "os"
 
 	"mtgconv/pkg/mtgconv"
 )
@@ -57,14 +57,18 @@ func main() {
 	}
 
 	// create the API query URL
+	slog.Debug("making API query URL")
 	deckAPIUrl := mtgconv.MakeAPIUrl(deckID)
+	slog.Debug("Got API Query url", "deckAPIUrl", deckAPIUrl)
+
 	// fetch the JSON query result
 	jsonStr, err := mtgconv.FetchJSON(deckAPIUrl, config.UserAgent)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		// fmt.Fprintln(os.Stderr, err)
+		// os.Exit(1)
+		log.Fatalf("error while getting the API query result: %v", err)
 	}
-	// fmt.Println(jsonStr)
+	slog.Debug("got API query result")
 
 	// convert the JSON string into Go objects
 	deck := mtgconv.MakeMoxfieldDeckResponse(jsonStr)
