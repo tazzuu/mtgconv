@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"encoding/json"
 )
 
 // USAGE:
@@ -52,7 +53,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(jsonStr)
+	// fmt.Println(jsonStr)
 
+	var deck DeckResponse
+	if err := json.Unmarshal([]byte(jsonStr), &deck); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(deck.Authors)
 
 }
