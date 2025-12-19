@@ -9,7 +9,14 @@ import (
 	"net/url"
 	"path"
 	"time"
+	"context"
+
+	"golang.org/x/time/rate"
 )
+
+// API rate limit 1 query per second
+var apiLimiter = rate.NewLimiter(rate.Every(time.Second), 1)
+
 
 func MakeAPIUrl(deckID string) string {
 	u, _ := url.Parse(apiBaseUrl)
@@ -17,7 +24,15 @@ func MakeAPIUrl(deckID string) string {
 	return (u.String())
 }
 
-func FetchJSON(url string, userAgent string) (string, error) {
+func FetchJSON(ctx context.Context, url string, userAgent string) (string, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	if err := apiLimiter.Wait(ctx); err != nil {
+		return "", err
+	}
+
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}

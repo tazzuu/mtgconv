@@ -25,7 +25,8 @@ func MoxfieldURLtoDckFormat(config Config) (string, error) {
 	slog.Debug("Got API Query url", "deckAPIUrl", deckAPIUrl)
 
 	// fetch the JSON query result
-	jsonStr, err := FetchJSON(deckAPIUrl, config.UserAgent)
+	// TODO: add context here
+	jsonStr, err := FetchJSON(nil, deckAPIUrl, config.UserAgent)
 	if err != nil {
 		return result, fmt.Errorf("error while getting the API query result: %v", err)
 	}
