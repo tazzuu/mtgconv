@@ -6,6 +6,7 @@ import (
 	"maps"
 	"slices"
 	"strings"
+	"context"
 )
 
 func MoxfieldURLtoDckFormat(config Config) (string, error) {
@@ -26,7 +27,7 @@ func MoxfieldURLtoDckFormat(config Config) (string, error) {
 
 	// fetch the JSON query result
 	// TODO: add context here
-	jsonStr, err := FetchJSON(nil, deckAPIUrl, config.UserAgent)
+	jsonStr, err := FetchJSON(context.TODO(), deckAPIUrl, config.UserAgent)
 	if err != nil {
 		return result, fmt.Errorf("error while getting the API query result: %v", err)
 	}
