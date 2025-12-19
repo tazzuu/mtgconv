@@ -7,14 +7,14 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"time"
 	"path"
+	"time"
 )
 
 func MakeAPIUrl(deckID string) string {
 	u, _ := url.Parse(apiBaseUrl)
 	u.Path = path.Join(u.Path, deckID)
-	return(u.String())
+	return (u.String())
 }
 
 func FetchJSON(url string, userAgent string) (string, error) {

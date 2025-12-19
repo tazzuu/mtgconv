@@ -7,10 +7,10 @@ package main
 //
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"log/slog"
-	"flag"
 	"os"
 
 	"mtgconv/pkg/mtgconv"
@@ -28,9 +28,10 @@ var (
 // cli parser logic goes here
 // USAGE:
 // urlString, config := parse()
-// 	debug := config.Debug
-// 	verbose := config.Verbose
-func parseCLI() (mtgconv.Config) {
+//
+//	debug := config.Debug
+//	verbose := config.Verbose
+func parseCLI() mtgconv.Config {
 	verbose := flag.Bool("verbose", false, "enable verbose logging (log level DEBUG)")
 	debug := flag.Bool("debug", false, "enable debug entrypoint")
 	printVersion := flag.Bool("version", false, "print version and quit")
@@ -61,8 +62,8 @@ func parseCLI() (mtgconv.Config) {
 		PrintVersion:   *printVersion,
 		OutputFilename: *outputFilename,
 		Version:        version,
-		UserAgent: *userAgent,
-		UrlString: urlString,
+		UserAgent:      *userAgent,
+		UrlString:      urlString,
 	}
 
 	return config
@@ -80,8 +81,6 @@ func main() {
 	debug := config.Debug
 	verbose := config.Verbose
 	mtgconv.ConfigureLogging(verbose)
-
-
 
 	// if we are doing debug run that instead and quit
 	if debug {

@@ -2,10 +2,10 @@ package mtgconv
 
 import (
 	"fmt"
-	"strings"
+	"log/slog"
 	"maps"
 	"slices"
-	"log/slog"
+	"strings"
 )
 
 func MoxfieldURLtoDckFormat(config Config) (string, error) {
@@ -62,7 +62,7 @@ func MoxfieldDeckToDckFormat(deck DeckResponse) string {
 				key,
 				strings.ToUpper(value.Card.Set),
 				value.Card.CN,
-				))
+			))
 		}
 	}
 
@@ -76,7 +76,7 @@ func MoxfieldDeckToDckFormat(deck DeckResponse) string {
 				key,
 				strings.ToUpper(value.Card.Set),
 				value.Card.CN,
-				))
+			))
 		}
 	}
 
@@ -101,10 +101,9 @@ func MoxfieldDeckToDckFormat(deck DeckResponse) string {
 				sideboardKeys[i],
 				strings.ToUpper(card.Card.Set),
 				card.Card.CN,
-				))
+			))
 		}
 	}
-
 
 	result = strings.Join(lines, "\n")
 

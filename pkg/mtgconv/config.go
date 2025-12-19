@@ -11,10 +11,6 @@ type Config struct {
 	PrintVersion   bool   // print version and quit
 	Version        string // the current version of the program
 	OutputFilename string // output file name
-	UserAgent string // user agent token string for web requests
-	UrlString string // user supplied URL to query for decklist
+	UserAgent      string // user agent token string for web requests
+	UrlString      string // user supplied URL to query for decklist
 }
-
-
-
-

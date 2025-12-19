@@ -6,7 +6,7 @@ import (
 )
 
 // initialize internal logger
-func ConfigureLogging (verbose bool) {
+func ConfigureLogging(verbose bool) {
 
 	// default log level is INFO
 	level := slog.LevelInfo
