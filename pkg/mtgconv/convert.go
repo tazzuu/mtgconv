@@ -5,7 +5,39 @@ import (
 	"strings"
 	"maps"
 	"slices"
+	"log/slog"
 )
+
+func MoxfieldURLtoDckFormat(config Config) (string, error) {
+	var result string
+
+	// get the deck ID from the provided URL
+	slog.Debug("getting the deck ID from the provided url", "url", config.UrlString)
+	deckID, err := DeckIDFromURL(config.UrlString)
+	slog.Debug("got deck ID", "deckID", deckID)
+	if err != nil {
+		return result, fmt.Errorf("error getting deck ID from URL: %v", err)
+	}
+
+	// create the API query URL
+	slog.Debug("making API query URL")
+	deckAPIUrl := MakeAPIUrl(deckID)
+	slog.Debug("Got API Query url", "deckAPIUrl", deckAPIUrl)
+
+	// fetch the JSON query result
+	jsonStr, err := FetchJSON(deckAPIUrl, config.UserAgent)
+	if err != nil {
+		return result, fmt.Errorf("error while getting the API query result: %v", err)
+	}
+	slog.Debug("got API query result")
+
+	// convert the JSON string into Go objects
+	deck := MakeMoxfieldDeckResponse(jsonStr)
+
+	// convert to final .dck decklist format
+	result = MoxfieldDeckToDckFormat(deck)
+	return result, nil
+}
 
 // convert the Moxfield JSON response object into a .dck decklist format
 func MoxfieldDeckToDckFormat(deck DeckResponse) string {

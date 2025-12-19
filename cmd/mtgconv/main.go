@@ -97,31 +97,9 @@ func main() {
 		log.Fatalf("checking API connectivity: %v", err)
 	}
 
-	// get the deck ID from the provided URL
-	slog.Debug("getting the deck ID from the provided url", "url", config.UrlString)
-	deckID, err := mtgconv.DeckIDFromURL(config.UrlString)
-	slog.Debug("got deck ID", "deckID", deckID)
+	deck, err := mtgconv.MoxfieldURLtoDckFormat(config)
 	if err != nil {
-		log.Fatalf("getting deck ID from URL: %v", err)
+		log.Fatalf("error converting to .dck declist format: %v", err)
 	}
-
-	// create the API query URL
-	slog.Debug("making API query URL")
-	deckAPIUrl := mtgconv.MakeAPIUrl(deckID)
-	slog.Debug("Got API Query url", "deckAPIUrl", deckAPIUrl)
-
-	// fetch the JSON query result
-	jsonStr, err := mtgconv.FetchJSON(deckAPIUrl, config.UserAgent)
-	if err != nil {
-		log.Fatalf("error while getting the API query result: %v", err)
-	}
-	slog.Debug("got API query result")
-
-	// convert the JSON string into Go objects
-	deck := mtgconv.MakeMoxfieldDeckResponse(jsonStr)
-	// fmt.Println(deck.Authors)
-
-	dckFormat := mtgconv.MoxfieldDeckToDckFormat(deck)
-	fmt.Println(dckFormat)
-
+	fmt.Println(deck)
 }
