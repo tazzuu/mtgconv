@@ -7,7 +7,13 @@ import (
 	"slices"
 	"strings"
 	"context"
+
+	_ "embed"
+	"text/template"
 )
+
+//go:embed templates/dck.txt
+var dckTemplateStr string
 
 func MoxfieldURLtoDckFormat(config Config) (string, error) {
 	var result string
@@ -37,12 +43,39 @@ func MoxfieldURLtoDckFormat(config Config) (string, error) {
 	deck := MakeMoxfieldDeckResponse(jsonStr)
 
 	// convert to final .dck decklist format
-	result = MoxfieldDeckToDckFormat(deck)
+	result, err = MoxfieldDeckToDckFormat(deck)
+	if err != nil {
+		return result, fmt.Errorf("error while generating the .dck template: %v", err)
+	}
 	return result, nil
 }
 
 // convert the Moxfield JSON response object into a .dck decklist format
-func MoxfieldDeckToDckFormat(deck DeckResponse) string {
+func MoxfieldDeckToDckFormat(deck DeckResponse) (string, error) {
+	var result string
+	funcMap := template.FuncMap{
+		"ToUpper": strings.ToUpper,
+	}
+	tmpl, err := template.New("dck").Funcs(funcMap).Parse(dckTemplateStr)
+	if err != nil {
+		slog.Error("Error initializing report template", "err", err)
+		return "", fmt.Errorf("initializing report template: %v", err)
+	}
+
+	var output strings.Builder
+	if err := tmpl.Execute(&output, deck); err != nil {
+		slog.Error("Error creating report", "err", err)
+		return "", fmt.Errorf("creating report: %v", err)
+	}
+
+	result = output.String()
+
+	return result, nil
+}
+
+
+// OlD method of converting to .dck text format
+func MoxfieldDeckToDckFormatOLD(deck DeckResponse) string {
 	var result string = ""
 	var lines []string
 

@@ -1,0 +1,15 @@
+[metadata]
+Name={{ .Name }}
+URL={{ .PublicURL }}
+
+[Commander]
+{{ range $key, $value := .Commanders }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}
+{{ end }}
+
+[Main]
+{{ range $key, $value := .Mainboard }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}
+{{ end }}
+
+[Sideboard]
+{{ range $key, $value := .Sideboard }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}
+{{ end }}
