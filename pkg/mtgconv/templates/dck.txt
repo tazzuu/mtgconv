@@ -2,6 +2,12 @@
 Name={{ .Name }}
 URL={{ .PublicURL }}
 Date={{ .DateStr }}
+Description={{ .Description }}
+Format={{ .Format }}
+Author={{ .CreatedByUser.UserName }}
+Created={{ .CreatedAtUTC }}
+Updated={{ .LastUpdatedAtUTC }}
+Version={{ .Version }}
 
 [Commander]
 {{ range $key, $value := .Commanders }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}

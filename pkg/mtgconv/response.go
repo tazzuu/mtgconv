@@ -73,6 +73,8 @@ type DeckResponse struct {
 
 	SideboardCount int                  `json:"sideboardCount"`
 	Sideboard      map[string]DeckEntry `json:"sideboard"`
+
+	Version int `json:"version"`
 }
 
 type User struct {
