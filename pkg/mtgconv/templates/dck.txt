@@ -1,6 +1,7 @@
 [metadata]
 Name={{ .Name }}
 URL={{ .PublicURL }}
+Date={{ .DateStr }}
 
 [Commander]
 {{ range $key, $value := .Commanders }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}

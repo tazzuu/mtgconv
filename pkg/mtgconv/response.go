@@ -4,7 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 )
+
+func GetDateStr() string {
+	return time.Now().Format("2006-01-02")
+}
 
 func MakeMoxfieldDeckResponse(jsonStr string) DeckResponse {
 	var deck DeckResponse
@@ -13,6 +18,7 @@ func MakeMoxfieldDeckResponse(jsonStr string) DeckResponse {
 		os.Exit(1)
 	}
 	deck.JsonStr = jsonStr
+	deck.DateStr = GetDateStr()
 	return deck
 }
 
@@ -31,6 +37,7 @@ type DeckResponse struct {
 	IsShared           bool   `json:"isShared"`
 	AuthorsCanEdit     bool   `json:"authorsCanEdit"`
 	JsonStr            string // the original JSON from the request response
+	DateStr string // the date that the deck was retrieved
 
 	CreatedByUser    User   `json:"createdByUser"`
 	Authors          []User `json:"authors"`
