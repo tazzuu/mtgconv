@@ -35,7 +35,7 @@ func parseCLI() mtgconv.Config {
 	verbose := flag.Bool("verbose", false, "enable verbose logging (log level DEBUG)")
 	debug := flag.Bool("debug", false, "enable debug entrypoint")
 	printVersion := flag.Bool("version", false, "print version and quit")
-	outputFilename := flag.String("output", "output", "filename prefix for report output")
+	outputFilename := flag.String("output", "-", "output filename (use - for stdout)")
 	userAgent := flag.String("user-agent", "foooo", "user token to use for web requests")
 	flag.Parse()
 
@@ -80,6 +80,7 @@ func main() {
 	config := parseCLI()
 	debug := config.Debug
 	verbose := config.Verbose
+	outputFilename := config.OutputFilename
 	mtgconv.ConfigureLogging(verbose)
 
 	// if we are doing debug run that instead and quit
@@ -90,6 +91,7 @@ func main() {
 	}
 
 	// make sure we can connect to external resources and API's
+	// TODO: implement this
 	slog.Debug("Checking API Conectivity")
 	err := mtgconv.CheckConnectivity()
 	if err != nil {
@@ -100,5 +102,24 @@ func main() {
 	if err != nil {
 		log.Fatalf("error converting to .dck declist format: %v", err)
 	}
-	fmt.Println(deck)
+
+	// write to stdout or to file
+	var out *os.File
+	if outputFilename == "-" {
+		out = os.Stdout
+	} else {
+		out, err = os.Create(outputFilename)
+		if err != nil {
+			log.Fatalf("creating output file: %v", err)
+		}
+		defer func() {
+			if err := out.Close(); err != nil {
+				log.Printf("closing output file: %v", err)
+			}
+		}()
+	}
+
+	if _, err := fmt.Fprintln(out, deck); err != nil {
+		log.Fatalf("writing output: %v", err)
+	}
 }
