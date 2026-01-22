@@ -118,28 +118,4 @@ func main() {
 	// 	log.Fatalf("checking API connectivity: %v", err)
 	// }
 
-	// deck, err := mtgconv.MoxfieldURLtoDckFormat(config)
-	// if err != nil {
-	// 	log.Fatalf("error converting to .dck declist format: %v", err)
-	// }
-
-	// write to stdout or to file
-	// var out *os.File
-	// if outputFilename == "-" {
-	// 	out = os.Stdout
-	// } else {
-	// 	out, err = os.Create(outputFilename)
-	// 	if err != nil {
-	// 		log.Fatalf("creating output file: %v", err)
-	// 	}
-	// 	defer func() {
-	// 		if err := out.Close(); err != nil {
-	// 			log.Printf("closing output file: %v", err)
-	// 		}
-	// 	}()
-	// }
-
-	// if _, err := fmt.Fprintln(out, deck); err != nil {
-	// 	log.Fatalf("writing output: %v", err)
-	// }
 }
