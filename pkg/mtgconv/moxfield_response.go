@@ -3,7 +3,6 @@ package mtgconv
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 )
 
@@ -11,18 +10,20 @@ func GetDateStr() string {
 	return time.Now().Format("2006-01-02")
 }
 
-func MakeMoxfieldDeckResponse(jsonStr string) DeckResponse {
-	var deck DeckResponse
-	if err := json.Unmarshal([]byte(jsonStr), &deck); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to parse JSON response: %v\n", err)
-		os.Exit(1)
+func MakeMoxfieldDeck(jsonStr string) (MoxfieldDeck, error) {
+	var deck MoxfieldDeck
+	err := json.Unmarshal([]byte(jsonStr), &deck)
+
+	if err != nil {
+		return deck, fmt.Errorf("error parsing Moxfield response JSON; %v", err)
 	}
-	deck.JsonStr = jsonStr
+
+	// deck.JsonStr = jsonStr
 	deck.DateStr = GetDateStr()
-	return deck
+	return deck, nil
 }
 
-type DeckResponse struct {
+type MoxfieldDeck struct {
 	ID                 string `json:"id"`
 	Name               string `json:"name"`
 	Description        string `json:"description"`
@@ -36,19 +37,19 @@ type DeckResponse struct {
 	AreCommentsEnabled bool   `json:"areCommentsEnabled"`
 	IsShared           bool   `json:"isShared"`
 	AuthorsCanEdit     bool   `json:"authorsCanEdit"`
-	JsonStr            string // the original JSON from the request response
+	// JsonStr            string // the original JSON from the request response // NOTE: removed this to save memory
 	DateStr string // the date that the deck was retrieved
 
-	CreatedByUser    User   `json:"createdByUser"`
-	Authors          []User `json:"authors"`
-	RequestedAuthors []User `json:"requestedAuthors"`
+	CreatedByUser    MoxfieldUser   `json:"createdByUser"`
+	Authors          []MoxfieldUser `json:"authors"`
+	RequestedAuthors []MoxfieldUser `json:"requestedAuthors"`
 
-	Main Card `json:"main"`
+	Main MoxfieldCard `json:"main"`
 
 	MainboardCount int                  `json:"mainboardCount"`
-	Mainboard      map[string]DeckEntry `json:"mainboard"`
+	Mainboard      map[string]MoxfieldDeckEntry `json:"mainboard"`
 
-	Hubs []Hub `json:"hubs"`
+	Hubs []MoxfieldHub `json:"hubs"`
 
 	CreatedAtUTC     string `json:"createdAtUtc"`
 	LastUpdatedAtUTC string `json:"lastUpdatedAtUtc"`
@@ -69,34 +70,34 @@ type DeckResponse struct {
 	Media []any `json:"media"`
 
 	CommandersCount int                  `json:"commandersCount"`
-	Commanders      map[string]DeckEntry `json:"commanders"`
+	Commanders      map[string]MoxfieldDeckEntry `json:"commanders"`
 
 	SideboardCount int                  `json:"sideboardCount"`
-	Sideboard      map[string]DeckEntry `json:"sideboard"`
+	Sideboard      map[string]MoxfieldDeckEntry `json:"sideboard"`
 
 	Version int `json:"version"`
 }
 
-type User struct {
+type MoxfieldUser struct {
 	UserName        string `json:"userName"`
 	DisplayName     string `json:"displayName"`
 	ProfileImageURL string `json:"profileImageUrl"`
 	Badges          []any  `json:"badges"`
 }
 
-type Hub struct {
+type MoxfieldHub struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
 
-type DeckEntry struct {
+type MoxfieldDeckEntry struct {
 	Quantity  int    `json:"quantity"`
 	BoardType string `json:"boardType"`
 	Finish    string `json:"finish"`
 	IsFoil    bool   `json:"isFoil"`
 	IsAlter   bool   `json:"isAlter"`
 	IsProxy   bool   `json:"isProxy"`
-	Card      Card   `json:"card"`
+	Card      MoxfieldCard   `json:"card"`
 
 	UseCmcOverride           bool `json:"useCmcOverride"`
 	UseManaCostOverride      bool `json:"useManaCostOverride"`
@@ -104,7 +105,7 @@ type DeckEntry struct {
 	ExcludedFromColor        bool `json:"excludedFromColor"`
 }
 
-type Card struct {
+type MoxfieldCard struct {
 	ID           string `json:"id"`
 	UniqueCardID string `json:"uniqueCardId"`
 	ScryfallID   string `json:"scryfall_id"`

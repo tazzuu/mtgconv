@@ -1,0 +1,9 @@
+package all
+
+import (
+	_ "mtgconv/pkg/mtgconv2/sources/moxfield"
+	_ "mtgconv/pkg/mtgconv2/outputs/dck"
+)
+
+// register all the mtgconv input and output handlers here
+// so that you can just import this single package and have it init all of them at once

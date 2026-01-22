@@ -1,6 +1,4 @@
-package mtgconv
-
-// cli parsing logic for the program
+package core
 
 // base object class for holding global configs to be passed throughout the program
 // this should generally be set via the cli interface
@@ -11,18 +9,7 @@ type Config struct {
 	PrintVersion   bool   // print version and quit
 	Version        string // the current version of the program
 	OutputFilename string // output file name
+	OutputFormat   OutputFormat
 	UserAgent      string // user agent token string for web requests
 	UrlString      string // user supplied URL to query for decklist
-	OutputFormat string
-
-	domain APISource // the API source domain for web input
 }
-
-func (c *Config) SetDomain(apiSource APISource) {
-	c.domain = apiSource
-}
-
-func (c *Config) GetDomain() APISource {
-	return c.domain
-}
-

@@ -10,11 +10,11 @@ Updated={{ .LastUpdatedAtUTC }}
 Version={{ .Version }}
 
 [Commander]
-{{ range $key, $value := .Commanders }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}
+{{ range $key, $value := .Commanders }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN  }}
 {{ end }}
 
 [Main]
-{{ range $key, $value := .Mainboard }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN }}
+{{ range $key, $value := .Mainboard }}{{ $value.Quantity }} {{ $key }}|{{ $value.Card.Set | ToUpper }}|{{ $value.Card.CN  }}
 {{ end }}
 
 [Sideboard]

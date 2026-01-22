@@ -1,13 +1,13 @@
-package mtgconv
+package moxfield
 
 import (
 	"time"
 	"golang.org/x/time/rate"
+	"mtgconv/pkg/mtgconv2/core"
 )
 
 var MoxfieldBaseUrl string = "https://api.moxfield.com/v2/decks/all"
-var sideboardMaxSize int = 10
-
+var ApiSource core.APISource = core.SourceMoxfield
 // API rate limit 1 query per second for Moxfield
 var MoxfieldAPIRateLimiter = rate.NewLimiter(rate.Every(time.Second), 1)
 

@@ -6,30 +6,22 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
-	"path"
 	"time"
 	"context"
-
-	"golang.org/x/time/rate"
 )
 
-// API rate limit 1 query per second
-var apiLimiter = rate.NewLimiter(rate.Every(time.Second), 1)
 
 
-func MakeAPIUrl(deckID string) string {
-	u, _ := url.Parse(apiBaseUrl)
-	u.Path = path.Join(u.Path, deckID)
-	return (u.String())
-}
-
-func FetchJSON(ctx context.Context, url string, userAgent string) (string, error) {
+// generic method for making the API request and getting a JSON
+func RequestJSON(ctx context.Context, url string, userAgent string) (string, error) {
+	// TODO: fill this in with the appropriate context object type
 	if ctx == nil {
 		ctx = context.Background()
 	}
 
-	if err := apiLimiter.Wait(ctx); err != nil {
+	// first check which API domain we are requesting from
+	// and update the request object appropriately
+	if err := MoxfieldAPIRateLimiter.Wait(ctx); err != nil {
 		return "", err
 	}
 

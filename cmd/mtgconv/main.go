@@ -13,7 +13,11 @@ import (
 	"log/slog"
 	"os"
 
+	// old package
 	"mtgconv/pkg/mtgconv"
+	// new package
+	"mtgconv/pkg/mtgconv2/core"
+	_ "mtgconv/pkg/mtgconv2/all" // registers all the input/output handlers
 )
 
 // overwrite this at build time ;
@@ -36,6 +40,7 @@ func parseCLI() mtgconv.Config {
 	debug := flag.Bool("debug", false, "enable debug entrypoint")
 	printVersion := flag.Bool("version", false, "print version and quit")
 	outputFilename := flag.String("output", "-", "output filename (use - for stdout)")
+	outputFormat := flag.String("output-fmt", "dck", "output format")
 	userAgent := flag.String("user-agent", "foooo", "user token to use for web requests")
 	flag.Parse()
 
@@ -64,6 +69,8 @@ func parseCLI() mtgconv.Config {
 		Version:        version,
 		UserAgent:      *userAgent,
 		UrlString:      urlString,
+		OutputFormat: *outputFormat,
+
 	}
 
 	return config
@@ -85,8 +92,23 @@ func main() {
 
 	// if we are doing debug run that instead and quit
 	if debug {
-		slog.Debug("Running DebugFunc")
-		mtgconv.DebugFunc()
+		core.ConfigureLogging(verbose)
+		slog.Debug("Starting DebugFunc")
+		// check the output format
+		format, err := core.ParseOutputFormat(config.OutputFormat)
+		if err != nil {
+			log.Fatalf("Error: invalid output format: %v", err)
+		}
+		core.DebugFunc(core.Config{
+			Debug:          config.Debug,
+			Verbose:        config.Verbose,
+			PrintVersion:   config.PrintVersion,
+			OutputFilename: config.OutputFilename,
+			Version:        config.Version,
+			UserAgent:      config.UserAgent,
+			UrlString:      config.UrlString,
+			OutputFormat: format,
+		})
 		return
 	}
 

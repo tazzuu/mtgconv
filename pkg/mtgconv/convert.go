@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"maps"
 	"slices"
+	"strconv"
 	"strings"
-	"context"
 
 	_ "embed"
 	"text/template"
@@ -18,29 +18,13 @@ var dckTemplateStr string
 func MoxfieldURLtoDckFormat(config Config) (string, error) {
 	var result string
 
-	// get the deck ID from the provided URL
-	slog.Debug("getting the deck ID from the provided url", "url", config.UrlString)
-	deckID, err := DeckIDFromURL(config.UrlString)
-	slog.Debug("got deck ID", "deckID", deckID)
-	if err != nil {
-		return result, fmt.Errorf("error getting deck ID from URL: %v", err)
-	}
-
-	// create the API query URL
-	slog.Debug("making API query URL")
-	deckAPIUrl := MakeAPIUrl(deckID)
-	slog.Debug("Got API Query url", "deckAPIUrl", deckAPIUrl)
-
-	// fetch the JSON query result
-	// TODO: add context here
-	jsonStr, err := FetchJSON(context.TODO(), deckAPIUrl, config.UserAgent)
-	if err != nil {
-		return result, fmt.Errorf("error while getting the API query result: %v", err)
-	}
-	slog.Debug("got API query result")
+	jsonStr, err := FetchMoxfieldDecklistJson(config)
 
 	// convert the JSON string into Go objects
-	deck := MakeMoxfieldDeckResponse(jsonStr)
+	deck, err := MakeMoxfieldDeck(jsonStr)
+	if err != nil {
+		return result, fmt.Errorf("error while parsing Moxfield API response: %v", err)
+	}
 
 	// convert to final .dck decklist format
 	result, err = MoxfieldDeckToDckFormat(deck)
@@ -51,10 +35,17 @@ func MoxfieldURLtoDckFormat(config Config) (string, error) {
 }
 
 // convert the Moxfield JSON response object into a .dck decklist format
-func MoxfieldDeckToDckFormat(deck DeckResponse) (string, error) {
+func MoxfieldDeckToDckFormat(deck MoxfieldDeck) (string, error) {
 	var result string
 	funcMap := template.FuncMap{
 		"ToUpper": strings.ToUpper,
+		"NumericOrZero": func(s string) string {
+			trimmed := strings.TrimSpace(s)
+			if _, err := strconv.Atoi(trimmed); err != nil {
+				return "0"
+			}
+			return trimmed
+		},
 	}
 	tmpl, err := template.New("dck").Funcs(funcMap).Parse(dckTemplateStr)
 	if err != nil {
@@ -74,8 +65,20 @@ func MoxfieldDeckToDckFormat(deck DeckResponse) (string, error) {
 }
 
 
-// OlD method of converting to .dck text format
-func MoxfieldDeckToDckFormatOLD(deck DeckResponse) string {
+
+
+
+
+
+
+
+
+//
+//
+//
+// OLD method of converting to .dck text format
+//
+func MoxfieldDeckToDckFormatOLD(deck MoxfieldDeck) string {
 	var result string = ""
 	var lines []string
 
