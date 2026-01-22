@@ -13,6 +13,7 @@ func MoxfieldEntryToCoreEntry(mxEntry MoxfieldDeckEntry, boardType core.BoardTyp
 			Card: core.Card{
 				Name: mxEntry.Card.Name, // TODO: figure out of the Card.Name always matches the cardName here
 				SetCode: mxEntry.Card.Set, // TODO: figure out if this is the full name or the short code for the name
+				SetType: mxEntry.Card.SetType,
 				CollectorNumber: mxEntry.Card.CN,
 				Layout: mxEntry.Card.Layout,
 				ManaCost: mxEntry.Card.ManaCost,

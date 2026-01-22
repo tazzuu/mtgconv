@@ -10,13 +10,13 @@ Updated={{ .Meta.UpdatedAt }}
 Version={{ .Meta.Version }}
 
 [Commander]
-{{ range $key, $value := . | CollectCommanders }}{{ $value.Quantity }} {{ $value.Card.Name }}|{{ $value.Card.SetCode | ToUpper }}|{{ $value.Card.CollectorNumber  }}
+{{ range $key, $value := . | CollectCommanders }}{{ $value | FormatDckLine }}
 {{ end }}
 
 [Main]
-{{ range $key, $value := . | CollectMainboard }}{{ $value.Quantity }} {{ $value.Card.Name }}|{{ $value.Card.SetCode | ToUpper }}|{{ $value.Card.CollectorNumber  }}
+{{ range $key, $value := . | CollectMainboard }}{{ $value | FormatDckLine }}
 {{ end }}
 
 [Sideboard]
-{{ range $key, $value := . | CollectSideboard }}{{ $value.Quantity }} {{ $value.Card.Name }}|{{ $value.Card.SetCode | ToUpper }}|{{ $value.Card.CollectorNumber  }}
+{{ range $key, $value := . | CollectSideboard }}{{ $value | FormatDckLine }}
 {{ end }}

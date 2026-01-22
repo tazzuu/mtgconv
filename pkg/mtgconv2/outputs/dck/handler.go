@@ -32,6 +32,7 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 		"CollectCommanders": core.CollectCommanders,
 		"CollectMainboard": core.CollectMainboard,
 		"CollectSideboard": core.CollectSideboard,
+		"FormatDckLine": FormatDckLine,
 	}
 
 	tmpl, err := template.New("dck").Funcs(funcMap).Parse(dckTemplateStr)

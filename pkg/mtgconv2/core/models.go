@@ -60,6 +60,7 @@ type DeckEntry struct {
 type Card struct {
 	Name            string
 	SetCode         string
+	SetType string
 	CollectorNumber string
 	Layout          string
 	ManaCost        string
