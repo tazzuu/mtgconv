@@ -76,3 +76,19 @@ type UnknownFinishType struct {
 func (e *UnknownFinishType) Error() string {
 	return fmt.Sprintf("unknown Finish type: %s", e.Finish)
 }
+
+type TemplateInitializationError struct {
+	Message error
+}
+
+func (e *TemplateInitializationError) Error() string {
+	return fmt.Sprintf("error initializing template: %v", e.Message)
+}
+
+type TemplateExecutionError struct {
+	Message error
+}
+
+func (e *TemplateExecutionError) Error() string {
+	return fmt.Sprintf("error executing template: %v", e.Message)
+}

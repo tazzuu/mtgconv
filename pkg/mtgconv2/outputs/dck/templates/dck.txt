@@ -1,0 +1,22 @@
+[metadata]
+Name={{ .Meta.Name }}
+URL={{ .Meta.URL }}
+Date={{ .Meta.Date | ConvertDate }}
+Description={{ .Meta.Description }}
+Format={{ .Meta.Format }}
+Author={{ .Meta | CollectAuthors }}
+Created={{ .Meta.CreatedAt }}
+Updated={{ .Meta.UpdatedAt }}
+Version={{ .Meta.Version }}
+
+[Commander]
+{{ range $key, $value := . | CollectCommanders }}{{ $value.Quantity }} {{ $value.Card.Name }}|{{ $value.Card.SetCode | ToUpper }}|{{ $value.Card.CollectorNumber  }}
+{{ end }}
+
+[Main]
+{{ range $key, $value := . | CollectMainboard }}{{ $value.Quantity }} {{ $value.Card.Name }}|{{ $value.Card.SetCode | ToUpper }}|{{ $value.Card.CollectorNumber  }}
+{{ end }}
+
+[Sideboard]
+{{ range $key, $value := . | CollectSideboard }}{{ $value.Quantity }} {{ $value.Card.Name }}|{{ $value.Card.SetCode | ToUpper }}|{{ $value.Card.CollectorNumber  }}
+{{ end }}
