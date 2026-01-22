@@ -18,6 +18,7 @@ func MakeMoxfieldDeck(jsonStr string) (MoxfieldDeck, error) {
 }
 
 // object type representing the fields present in the Moxfield API response
+// NOTE: there are a lot more fields I have not included here
 type MoxfieldDeck struct {
 	ID                 string `json:"id"`
 	Name               string `json:"name"`

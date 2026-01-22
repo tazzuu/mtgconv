@@ -1,6 +1,8 @@
 # mtgconv
 
-MTG Deck converter
+Magic the Gathering Deck list converter.
+
+Program and framework to convert deck lists between different input sources and output formats.
 
 ## Usage
 

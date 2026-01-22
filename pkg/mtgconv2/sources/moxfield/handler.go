@@ -8,6 +8,8 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+// input handler for decks from Moxfield
+
 type Handler struct{}
 
 func (h Handler) Source() core.APISource {
