@@ -14,7 +14,8 @@ import (
 	"os"
 
 	// old package
-	"mtgconv/pkg/mtgconv"
+	// "mtgconv/pkg/mtgconv"
+
 	// new package
 	"mtgconv/pkg/mtgconv2/core"
 	_ "mtgconv/pkg/mtgconv2/all" // registers all the input/output handlers
@@ -35,7 +36,7 @@ var (
 //
 //	debug := config.Debug
 //	verbose := config.Verbose
-func parseCLI() mtgconv.Config {
+func parseCLI() core.Config {
 	verbose := flag.Bool("verbose", false, "enable verbose logging (log level DEBUG)")
 	debug := flag.Bool("debug", false, "enable debug entrypoint")
 	printVersion := flag.Bool("version", false, "print version and quit")
@@ -60,8 +61,14 @@ func parseCLI() mtgconv.Config {
 		urlString = posArgs[0]
 	}
 
+	// check the output format
+	format, err := core.ParseOutputFormat(*outputFormat)
+	if err != nil {
+		log.Fatalf("Error: invalid output format: %v", err)
+	}
+
 	// create config object
-	config := mtgconv.Config{
+	config := core.Config{
 		Debug:          *debug,
 		Verbose:        *verbose,
 		PrintVersion:   *printVersion,
@@ -69,7 +76,7 @@ func parseCLI() mtgconv.Config {
 		Version:        version,
 		UserAgent:      *userAgent,
 		UrlString:      urlString,
-		OutputFormat: *outputFormat,
+		OutputFormat: format,
 
 	}
 
@@ -87,61 +94,56 @@ func main() {
 	config := parseCLI()
 	debug := config.Debug
 	verbose := config.Verbose
-	outputFilename := config.OutputFilename
-	mtgconv.ConfigureLogging(verbose)
 
 	// if we are doing debug run that instead and quit
 	if debug {
-		core.ConfigureLogging(verbose)
 		slog.Debug("Starting DebugFunc")
-		// check the output format
-		format, err := core.ParseOutputFormat(config.OutputFormat)
-		if err != nil {
-			log.Fatalf("Error: invalid output format: %v", err)
-		}
-		core.DebugFunc(core.Config{
-			Debug:          config.Debug,
-			Verbose:        config.Verbose,
-			PrintVersion:   config.PrintVersion,
-			OutputFilename: config.OutputFilename,
-			Version:        config.Version,
-			UserAgent:      config.UserAgent,
-			UrlString:      config.UrlString,
-			OutputFormat: format,
-		})
 		return
 	}
 
+	// start logging
+	core.ConfigureLogging(verbose)
+
+	// main entrypoint for the program
+	err := core.RunCLI(config)
+	if err != nil {
+		log.Fatalf("error running program: %v", err)
+	}
+
+
+
+
+	// TODO: re-enable these options
 	// make sure we can connect to external resources and API's
 	// TODO: implement this
-	slog.Debug("Checking API Conectivity")
-	err := mtgconv.CheckConnectivity()
-	if err != nil {
-		log.Fatalf("checking API connectivity: %v", err)
-	}
+	// slog.Debug("Checking API Conectivity")
+	// err := mtgconv.CheckConnectivity()
+	// if err != nil {
+	// 	log.Fatalf("checking API connectivity: %v", err)
+	// }
 
-	deck, err := mtgconv.MoxfieldURLtoDckFormat(config)
-	if err != nil {
-		log.Fatalf("error converting to .dck declist format: %v", err)
-	}
+	// deck, err := mtgconv.MoxfieldURLtoDckFormat(config)
+	// if err != nil {
+	// 	log.Fatalf("error converting to .dck declist format: %v", err)
+	// }
 
 	// write to stdout or to file
-	var out *os.File
-	if outputFilename == "-" {
-		out = os.Stdout
-	} else {
-		out, err = os.Create(outputFilename)
-		if err != nil {
-			log.Fatalf("creating output file: %v", err)
-		}
-		defer func() {
-			if err := out.Close(); err != nil {
-				log.Printf("closing output file: %v", err)
-			}
-		}()
-	}
+	// var out *os.File
+	// if outputFilename == "-" {
+	// 	out = os.Stdout
+	// } else {
+	// 	out, err = os.Create(outputFilename)
+	// 	if err != nil {
+	// 		log.Fatalf("creating output file: %v", err)
+	// 	}
+	// 	defer func() {
+	// 		if err := out.Close(); err != nil {
+	// 			log.Printf("closing output file: %v", err)
+	// 		}
+	// 	}()
+	// }
 
-	if _, err := fmt.Fprintln(out, deck); err != nil {
-		log.Fatalf("writing output: %v", err)
-	}
+	// if _, err := fmt.Fprintln(out, deck); err != nil {
+	// 	log.Fatalf("writing output: %v", err)
+	// }
 }
