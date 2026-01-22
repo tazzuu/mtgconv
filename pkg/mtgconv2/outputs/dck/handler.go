@@ -26,6 +26,7 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 	_ = cfg
 
 	var result string
+	var compatibilityMode bool = cfg.CompatibilityMode
 
 	funcMap := template.FuncMap{
 		"ToUpper": strings.ToUpper,
@@ -33,8 +34,16 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 		"CollectAuthors": core.CollectAuthors,
 		"CollectCommanders": core.CollectCommanders,
 		"CollectMainboard": core.CollectMainboard,
-		"CollectSideboard": core.CollectSideboard,
-		"FormatDckLine": FormatDckLine,
+		"CollectSideboard": func(d core.Deck) []core.DeckEntry {
+			entries := core.CollectSideboard(d)
+			if compatibilityMode && len(entries) > 10 {
+				return entries[:10]
+			}
+			return entries
+		},
+		"FormatDckLine": func(entry core.DeckEntry) string {
+			return FormatDckLine(entry, compatibilityMode)
+		},
 	}
 
 	tmpl, err := template.New("dck").Funcs(funcMap).Parse(dckTemplateStr)

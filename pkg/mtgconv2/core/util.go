@@ -3,6 +3,7 @@ package core
 import (
 	"time"
 	"strings"
+	"sort"
 )
 
 func GetDateStr() string {
@@ -17,12 +18,23 @@ func CollectAuthors(m DeckMeta) string {
 	return strings.Join(m.Authors, ",")
 }
 
+func SortDeckEntries(entries []DeckEntry) []DeckEntry {
+	out := make([]DeckEntry, len(entries))
+	copy(out, entries)
+	sort.Slice(out, func(i, j int) bool {
+        a := out[i]
+        b := out[j]
+        return a.Card.Name < b.Card.Name
+    })
+	return out
+}
+
 func CollectCommanders(d Deck) []DeckEntry {
 	// check if the deck has Commander section
 	val, ok := d.Sections[BoardCommander]
 	// If the key exists
 	if ok {
-		return val
+		return SortDeckEntries(val)
 	}
 	return []DeckEntry{}
 }
@@ -30,7 +42,7 @@ func CollectCommanders(d Deck) []DeckEntry {
 func CollectMainboard(d Deck) []DeckEntry {
 	val, ok := d.Sections[BoardMain]
 	if ok {
-		return val
+		return SortDeckEntries(val)
 	}
 	return []DeckEntry{}
 }
@@ -38,7 +50,7 @@ func CollectMainboard(d Deck) []DeckEntry {
 func CollectSideboard(d Deck) []DeckEntry {
 	val, ok := d.Sections[BoardSideboard]
 	if ok {
-		return val
+		return SortDeckEntries(val)
 	}
 	return []DeckEntry{}
 }

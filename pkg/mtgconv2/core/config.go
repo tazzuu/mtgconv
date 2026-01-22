@@ -7,6 +7,7 @@ type Config struct {
 	Debug          bool   // enable debug entrypoint for dev testing
 	Verbose        bool   // enable verbose logging
 	PrintVersion   bool   // print version and quit
+	CompatibilityMode bool // enable compatibility mode for modified output
 	Version        string // the current version of the program
 	OutputFilename string // output file name
 	OutputFormat   OutputFormat

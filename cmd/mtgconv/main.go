@@ -39,6 +39,7 @@ func parseCLI() core.Config {
 	outputFilename := flag.String("output", "-", "output filename (use - for stdout)")
 	outputFormat := flag.String("output-fmt", "dck", "output format")
 	userAgent := flag.String("user-agent", "foooo", "user token to use for web requests")
+	compatibilityMode := flag.Bool("compat", false, "enable compatibility mode for output")
 	flag.Parse()
 
 	posArgs := flag.Args() // all positional args passed
@@ -73,7 +74,7 @@ func parseCLI() core.Config {
 		UserAgent:      *userAgent,
 		UrlString:      urlString,
 		OutputFormat: format,
-
+		CompatibilityMode: *compatibilityMode,
 	}
 
 	return config
@@ -105,17 +106,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("error running program: %v", err)
 	}
-
-
-
-
-	// TODO: re-enable these options
-	// make sure we can connect to external resources and API's
-	// TODO: implement this
-	// slog.Debug("Checking API Conectivity")
-	// err := mtgconv.CheckConnectivity()
-	// if err != nil {
-	// 	log.Fatalf("checking API connectivity: %v", err)
-	// }
-
 }

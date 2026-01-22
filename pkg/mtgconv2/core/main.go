@@ -8,6 +8,8 @@ import (
 )
 
 // main entrypoint for the program when running from the cli
+// TODO: move this back into the cmd/main.go instead
+// TODO: API connectivity check
 func RunCLI(config Config) (err error) {
 	slog.Debug("Running RunCLI mtgconv2.core", "config", config)
 	// run the main pipeline with the given config
