@@ -2,6 +2,8 @@ package core
 
 import "fmt"
 
+// custom error types used in the package
+
 type UnrecognizedDomain struct {
 	Message string
 }

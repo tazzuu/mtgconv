@@ -5,6 +5,7 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+// convert the handler's Moxfield response object into the standardized Deck object type
 func MoxfieldEntryToCoreEntry(mxEntry MoxfieldDeckEntry, boardType core.BoardType) (core.DeckEntry) {
 	return core.DeckEntry{
 			Quantity: mxEntry.Quantity,

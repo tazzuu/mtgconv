@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-
+// convert the Moxfield API response into an object
 func MakeMoxfieldDeck(jsonStr string) (MoxfieldDeck, error) {
 	var deck MoxfieldDeck
 	err := json.Unmarshal([]byte(jsonStr), &deck)
@@ -17,6 +17,7 @@ func MakeMoxfieldDeck(jsonStr string) (MoxfieldDeck, error) {
 	return deck, nil
 }
 
+// object type representing the fields present in the Moxfield API response
 type MoxfieldDeck struct {
 	ID                 string `json:"id"`
 	Name               string `json:"name"`

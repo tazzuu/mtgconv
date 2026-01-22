@@ -13,10 +13,6 @@ import (
 	"log/slog"
 	"os"
 
-	// old package
-	// "mtgconv/pkg/mtgconv"
-
-	// new package
 	"mtgconv/pkg/mtgconv2/core"
 	_ "mtgconv/pkg/mtgconv2/all" // registers all the input/output handlers
 )

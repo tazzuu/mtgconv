@@ -5,6 +5,7 @@ import (
 	"net/url"
 )
 
+// determine which API source was provided based on the input URL
 func DetectURLSource(urlStr string) (APISource, error) {
 	slog.Debug("parsing domain for URL", "urlStr", urlStr)
 

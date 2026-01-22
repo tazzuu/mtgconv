@@ -2,6 +2,9 @@ package core
 
 import "sync"
 
+// maintains a registry of all the input and output handlers
+// handlers should add themselves to the registry with their 'init' methods
+
 var (
 	sourceMu sync.RWMutex
 	outputMu sync.RWMutex

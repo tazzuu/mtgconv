@@ -9,13 +9,14 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+// build the API query URL from the deck ID
 func MakeMoxfieldAPIUrl(deckID string) string {
 	u, _ := url.Parse(MoxfieldBaseUrl)
 	u.Path = path.Join(u.Path, deckID)
 	return (u.String())
 }
 
-// get the final part of the URL
+// get the deck ID from the URL provided by the user
 func DeckIDFromURL(rawUrl string) (string, error) {
 	// rawUrl := "https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ"
 	slog.Debug("getting the deck ID from the provided url", "url", rawUrl)

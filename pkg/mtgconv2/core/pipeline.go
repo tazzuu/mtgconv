@@ -5,6 +5,7 @@ import (
 	"log/slog"
 )
 
+// runs the main data conversion pipeline using the input and output handlers selected
 func Run(ctx context.Context, cfg Config) (string, error) {
 	slog.Debug("starting processing pipeline")
 	src, err := DetectURLSource(cfg.UrlString)

@@ -10,6 +10,8 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+// handler for the .dck decklist output format
+
 //go:embed templates/dck.txt
 var dckTemplateStr string
 
