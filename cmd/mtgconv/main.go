@@ -77,6 +77,10 @@ func parseCLI() core.Config {
 		CompatibilityMode: *compatibilityMode,
 	}
 
+	if *outputFilename == "auto" {
+		config.AutoFilename = true
+	}
+
 	return config
 }
 

@@ -13,7 +13,7 @@ import (
 func RunCLI(config Config) (err error) {
 	slog.Debug("Running RunCLI mtgconv2.core", "config", config)
 	// run the main pipeline with the given config
-	output, err := Run(context.Background(), config)
+	output, deck, err := Run(context.Background(), config)
 	if err != nil {
 		slog.Error("error running deck processing pipeline", "err", err)
 		return err
@@ -21,13 +21,20 @@ func RunCLI(config Config) (err error) {
 
 	// decide where to print the output
 	var out *os.File
+	// print to stdout if - or empty string passed
 	if config.OutputFilename == "-" || config.OutputFilename == "" {
 		out = os.Stdout
 	} else {
-		out, err = os.Create(config.OutputFilename)
+		// auto generate a filename
+		var outputFilename string = config.OutputFilename
+		if config.AutoFilename == true {
+			outputFilename = GenerateSafeFilename(config, deck)
+		}
+		out, err = os.Create(outputFilename)
 		if err != nil {
 			return err
 		}
+		// NOTE: this attempt to return error from defer is tricky and suspicious
 		defer func() {
 			if cerr := out.Close(); cerr != nil {
 				err = cerr

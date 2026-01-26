@@ -1,9 +1,11 @@
 package core
 
 import (
-	"time"
-	"strings"
+	"fmt"
 	"sort"
+	"strings"
+	"time"
+	"regexp"
 )
 
 func GetDateStr() string {
@@ -95,4 +97,27 @@ func ParseFinishType(raw string) (FinishType, error) {
 	default:
 		return "", &UnknownFinishType{raw}
 	}
+}
+
+var safeFileRe = regexp.MustCompile(`[^A-Za-z0-9._-]+`)
+
+func SanitizeFilename(name string) string {
+	n := strings.TrimSpace(name)
+	if n == "" {
+		return "deck"
+	}
+	n = safeFileRe.ReplaceAllString(n, "_")
+	n = strings.Trim(n, "._-")
+	if n == "" {
+		return "deck"
+	}
+	if len(n) > 120 {
+		n = n[:120]
+	}
+	return n
+}
+
+func GenerateSafeFilename(config Config, deck Deck) string {
+	var output string = fmt.Sprintf("%s_v%d_%s.%s", SanitizeFilename(deck.Meta.Name), deck.Meta.Version, deck.Meta.Date.Format("20060102"), config.OutputFormat)
+	return output
 }

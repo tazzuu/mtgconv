@@ -13,4 +13,5 @@ type Config struct {
 	OutputFormat   OutputFormat
 	UserAgent      string // user agent token string for web requests
 	UrlString      string // user supplied URL to query for decklist
+	AutoFilename bool // automatically create an output filename
 }
