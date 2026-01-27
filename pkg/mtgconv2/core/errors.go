@@ -71,6 +71,38 @@ func (e *InvalidQuantity) Error() string {
 	return fmt.Sprintf("invalid quantity: %d", e.Quantity)
 }
 
+type UnknownSortType struct {
+	Type string
+}
+
+func (e *UnknownSortType) Error() string {
+	return fmt.Sprintf("unknown Sort type: %s", e.Type)
+}
+
+type UnknownBracket struct {
+	Bracket int
+}
+
+func (e *UnknownBracket) Error() string {
+	return fmt.Sprintf("unknown Bracket value: %d", e.Bracket)
+}
+
+type UnknownSortDirection struct {
+	Direction string
+}
+
+func (e *UnknownSortDirection) Error() string {
+	return fmt.Sprintf("unknown sort direction: %s", e.Direction)
+}
+
+type UnknownDeckFormat struct {
+	Format string
+}
+
+func (e *UnknownDeckFormat) Error() string {
+	return fmt.Sprintf("unknown deck format: %s", e.Format)
+}
+
 type UnknownFinishType struct {
 	Finish string
 }

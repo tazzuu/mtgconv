@@ -15,3 +15,13 @@ type Config struct {
 	UrlString      string // user supplied URL to query for decklist
 	AutoFilename bool // automatically create an output filename
 }
+
+
+// config for doing deck searches
+type SearchConfig struct {
+	SortType SortType
+	MinBracket CommanderBracket
+	MaxBracket CommanderBracket
+	SortDirection SortDirection
+	DeckFormat DeckFormat
+}

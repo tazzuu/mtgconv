@@ -96,14 +96,15 @@ func main() {
 	debug := config.Debug
 	verbose := config.Verbose
 
-	// if we are doing debug run that instead and quit
-	if debug {
-		slog.Debug("Starting DebugFunc")
-		return
-	}
-
 	// start logging
 	core.ConfigureLogging(verbose)
+
+	// if we are doing debug run that instead and quit
+	if debug {
+		slog.Debug("Starting DebugFunc from cmd/main.go")
+		core.DebugFunc(config)
+		return
+	}
 
 	// main entrypoint for the program
 	err := core.RunCLI(config)

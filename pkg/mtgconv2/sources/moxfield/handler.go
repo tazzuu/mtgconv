@@ -70,6 +70,44 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config) (core
 	// return core.Deck{}, fmt.Errorf("moxfield source handler not implemented")
 }
 
+func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchConfig) (string, error) {
+	_ = ctx
+	_ = cfg
+	slog.Debug("starting Moxfield Search")
+	slog.Debug("Got search config", "scfg", scfg)
+
+	// start building http request
+	slog.Debug("building the http request")
+	req, err := http.NewRequest(http.MethodGet, MoxfieldDeckSearchUrl, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", cfg.UserAgent)
+
+	// start appending query params
+	q := req.URL.Query()
+	q.Add("pageNumber", "1")
+	q.Add("pageSize", "64")
+	q.Add("sortType", string(scfg.SortType))
+	q.Add("sortDirection", string(scfg.SortDirection))
+	q.Add("fmt", string(scfg.DeckFormat))
+	q.Add("minBracket", scfg.MinBracket.String())
+	q.Add("maxBracket", scfg.MaxBracket.String())
+	req.URL.RawQuery = q.Encode()
+
+	slog.Debug("got query URL", "url", req.URL.String())
+
+	// run the http request
+	slog.Debug("running the http request")
+	jsonStr, err := core.DoRequestJSON(req)
+	if err != nil {
+		return "", err
+	}
+
+	return jsonStr, nil
+}
+
 func init() {
 	core.RegisterSource(Handler{})
 }

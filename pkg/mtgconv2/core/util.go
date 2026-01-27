@@ -99,6 +99,55 @@ func ParseFinishType(raw string) (FinishType, error) {
 	}
 }
 
+// returns the correct FinishType enum from the available options
+func ParseSortType(raw string) (SortType, error) {
+	switch strings.ToLower(raw) {
+	case string(SortLikes):
+		return SortLikes, nil
+	case string(SortViews):
+		return SortViews, nil
+	default:
+		return "", &UnknownSortType{raw}
+	}
+}
+
+func ParseSortDirection(raw string) (SortDirection, error) {
+	switch strings.ToLower(raw) {
+	case string(SortAsc):
+		return SortAsc, nil
+	case string(SortDesc):
+		return SortDesc, nil
+	default:
+		return "", &UnknownSortDirection{raw}
+	}
+}
+
+func ParseDeckFormat(raw string) (DeckFormat, error) {
+	switch strings.ToLower(raw) {
+	case string(DeckFormatCommander):
+		return DeckFormatCommander, nil
+	default:
+		return "", &UnknownDeckFormat{raw}
+	}
+}
+
+func ParseBracket(raw int) (CommanderBracket, error) {
+	switch raw {
+	case int(CommanderBracket1):
+		return CommanderBracket1, nil
+	case int(CommanderBracket2):
+		return CommanderBracket2, nil
+	case int(CommanderBracket3):
+		return CommanderBracket3, nil
+	case int(CommanderBracket4):
+		return CommanderBracket4, nil
+	case int(CommanderBracket5):
+		return CommanderBracket5, nil
+	default:
+		return 0, &UnknownBracket{raw}
+	}
+}
+
 var safeFileRe = regexp.MustCompile(`[^A-Za-z0-9._-]+`)
 
 func SanitizeFilename(name string) string {
@@ -120,4 +169,39 @@ func SanitizeFilename(name string) string {
 func GenerateSafeFilename(config Config, deck Deck) string {
 	var output string = fmt.Sprintf("%s_v%d_%s.%s", SanitizeFilename(deck.Meta.Name), deck.Meta.Version, deck.Meta.Date.Format("20060102"), config.OutputFormat)
 	return output
+}
+
+
+
+
+// returns a Search Config with default settings
+func DefaultSearchConfig() (SearchConfig, error) {
+	sortType, err := ParseSortType("likes")
+	if err != nil {
+		return SearchConfig{}, err
+	}
+	minBracket, err := ParseBracket(1)
+	if err != nil {
+		return SearchConfig{}, err
+	}
+	maxBracket, err := ParseBracket(5)
+	if err != nil {
+		return SearchConfig{}, err
+	}
+	sortDirection, err := ParseSortDirection("descending")
+	if err != nil {
+		return SearchConfig{}, err
+	}
+	deckFormat, err := ParseDeckFormat("commander")
+	if err != nil {
+		return SearchConfig{}, err
+	}
+	config := SearchConfig{
+		SortType: sortType,
+		MinBracket: minBracket,
+		MaxBracket: maxBracket,
+		SortDirection: sortDirection,
+		DeckFormat: deckFormat,
+	}
+	return config, nil
 }

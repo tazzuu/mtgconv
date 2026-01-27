@@ -35,7 +35,8 @@ func (d *Deck) AddToSection(section BoardType, entry DeckEntry) error {
 
 // metadata for a deck
 type DeckMeta struct {
-	ID          string
+	ID          string // alphanumeric short id for the deck
+	PublicID string // longer ID used by some API's such as Moxfield
 	Name        string
 	Description string
 	Format      string
@@ -45,6 +46,10 @@ type DeckMeta struct {
 	CreatedAt string // time in UTC
 	UpdatedAt string // time in UTC
 	Authors     []string
+	Bracket CommanderBracket
+	LikeCount int
+	ViewCount int
+	CommentCount int
 	Version int
 	Source      APISource
 }
