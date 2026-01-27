@@ -197,6 +197,15 @@ func SaveTxtToFile(filename string, input string) error {
 }
 
 
+// if the card has // in the name, return the parts
+func SplitMultiFaceName(raw string) []string {
+	parts := strings.Split(raw, "//")
+	for i := range parts {
+		parts[i] = strings.TrimSpace(parts[i])
+	}
+	return parts
+}
+
 // returns a Search Config with default settings
 func DefaultSearchConfig() (SearchConfig, error) {
 	sortType, err := ParseSortType("likes")

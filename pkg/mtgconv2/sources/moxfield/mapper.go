@@ -32,6 +32,7 @@ func MoxfieldEntryToCoreEntry(mxEntry MoxfieldDeckEntry, boardType core.BoardTyp
 					CardKingdomID: mxEntry.Card.CardKingdomID,
 					MultiverseIDs: mxEntry.Card.MultiverseIDs,
 				},
+				NumFaces: len(mxEntry.Card.CardFaces),
 			},
 		}
 }

@@ -78,6 +78,7 @@ type Card struct {
 	Rarity          string
 	Language        string
 	IDs             CardIDs
+	NumFaces int
 }
 
 type CardIDs struct {
