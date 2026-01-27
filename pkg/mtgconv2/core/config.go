@@ -14,6 +14,7 @@ type Config struct {
 	UserAgent      string // user agent token string for web requests
 	UrlString      string // user supplied URL to query for decklist
 	AutoFilename bool // automatically create an output filename
+	SaveJSON bool // save a copy of the API response JSON
 }
 
 

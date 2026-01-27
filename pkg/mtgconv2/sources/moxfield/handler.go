@@ -53,6 +53,18 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config) (core
 		return core.Deck{}, err
 	}
 
+	// save JSON to file if that was requested
+	if cfg.SaveJSON {
+		// indent the JSON for readability
+		pretty, err := core.PrettyJSON(jsonStr)
+		if err != nil {
+			return core.Deck{}, err
+		}
+		if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
+			return core.Deck{}, err
+		}
+	}
+
 	// convert the JSON string into Go objects
 	slog.Debug("parsing the http request JSON")
 	moxfieldDeck, err := MakeMoxfieldDeck(jsonStr)

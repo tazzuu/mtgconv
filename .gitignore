@@ -3,3 +3,4 @@ build
 ./mtgconv
 *.dck
 mtgconv
+response.json

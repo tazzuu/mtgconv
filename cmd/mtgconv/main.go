@@ -40,6 +40,7 @@ func parseCLI() core.Config {
 	outputFormat := flag.String("output-fmt", "dck", "output format")
 	userAgent := flag.String("user-agent", "foooo", "user token to use for web requests")
 	compatibilityMode := flag.Bool("compat", false, "enable compatibility mode for output")
+	saveJSON := flag.Bool("save-json", false, fmt.Sprintf("save a copy of the response json to %s", core.ResponseJSONFilename))
 	flag.Parse()
 
 	posArgs := flag.Args() // all positional args passed
@@ -75,6 +76,7 @@ func parseCLI() core.Config {
 		UrlString:      urlString,
 		OutputFormat: format,
 		CompatibilityMode: *compatibilityMode,
+		SaveJSON: *saveJSON,
 	}
 
 	if *outputFilename == "auto" {

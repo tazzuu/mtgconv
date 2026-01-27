@@ -2,6 +2,9 @@ package core
 
 import (
 	"fmt"
+	"os"
+	"bytes"
+	"encoding/json"
 	"sort"
 	"strings"
 	"time"
@@ -171,7 +174,27 @@ func GenerateSafeFilename(config Config, deck Deck) string {
 	return output
 }
 
+func PrettyJSON(raw string) (string, error) {
+    var out bytes.Buffer
+    if err := json.Indent(&out, []byte(raw), "", "  "); err != nil {
+        return "", err
+    }
+    return out.String(), nil
+}
 
+
+func SaveTxtToFile(filename string, input string) error {
+	out, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+		// NOTE: this attempt to return error from defer is tricky and suspicious
+		defer func() {
+			_ = out.Close()
+		}()
+	_, err = fmt.Fprintln(out, input)
+	return err
+}
 
 
 // returns a Search Config with default settings
