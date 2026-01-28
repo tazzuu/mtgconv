@@ -17,6 +17,20 @@ func MakeMoxfieldDeck(jsonStr string) (MoxfieldDeck, error) {
 	return deck, nil
 }
 
+func MakeMoxfieldSeachResult(jsonStr string) ([]MoxfieldDeckSearchResult, error) {
+	var results []MoxfieldDeckSearchResult
+	err := json.Unmarshal([]byte(jsonStr), &results)
+
+	if err != nil {
+		return []MoxfieldDeckSearchResult{}, err
+	}
+	for i, _ := range results {
+		results[i].RetrievedAt = time.Now()
+	}
+
+	return results, nil
+}
+
 // object type representing the fields present in the Moxfield API response
 // NOTE: there are a lot more fields I have not included here
 type MoxfieldDeck struct {
@@ -187,4 +201,29 @@ type MoxfieldCard struct {
 	ManapoolURL       string `json:"manapool_url"`
 	IsToken           bool   `json:"isToken"`
 	DefaultFinish     string `json:"defaultFinish"`
+}
+
+
+type MoxfieldDeckSearchResult struct {
+	ID string `json:"id"`
+	Name string `json:"name"`
+	Format string `json:"format"`
+	PublicUrl string `json:"publicUrl"`
+	PublicId string `json:"publicId"`
+	LikeCount int `json:"likeCount"`
+	ViewCount int `json:"viewCount"`
+	CommentCount int `json:"commentCount"`
+	CreatedByUser    MoxfieldUser   `json:"createdByUser"`
+	Authors          []MoxfieldUser `json:"authors"`
+	IsLegal bool `json:"isLegal"`
+	CreatedAtUTC     string `json:"createdAtUtc"`
+	LastUpdatedAtUTC string `json:"lastUpdatedAtUtc"`
+	MainboardCount int `json:"mainboardCount"`
+	SideboardCount int `json:"sideboardCount"`
+	MaybeboardCount int `json:"maybeboardCount"`
+	Colors []string `json:"colors"`
+	Bracket int `json:"bracket"`
+	UserBracket int `json:"userBracket"`
+	AutoBracket int `json:"autoBracket"`
+	RetrievedAt time.Time
 }

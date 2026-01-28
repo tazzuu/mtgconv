@@ -117,6 +117,15 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 		return "", err
 	}
 
+	// convert to Go object
+	slog.Debug("converting to Go object")
+	result, err := MakeMoxfieldSeachResult(jsonStr)
+	if err != nil {
+		slog.Error("error parsing JSON", "err", err)
+		return "", err
+	}
+	slog.Debug("got result", "result", result)
+
 	return jsonStr, nil
 }
 
