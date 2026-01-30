@@ -1,9 +1,9 @@
 package main
 
 // main cli entrypoint for the program
+//
 // USAGE:
-// go run cmd/mtgconv/*.go --user-agent "$MOXKEY" https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ
-// https://api.moxfield.com/v2/decks/all/1RAZHbA3H0WE7EHFK36-_Q
+// ./mtgconv --user-agent "$MOXKEY" convert --output-filename auto --save-json --compatibility-mode https://moxfield.com/decks/mrIbUS4YX0yqhpQMgsWY2w
 //
 
 import (
@@ -12,6 +12,8 @@ import (
 	"log"
 	"log/slog"
 	"os"
+
+	"github.com/alecthomas/kong"
 
 	"mtgconv/pkg/mtgconv2/core"
 	_ "mtgconv/pkg/mtgconv2/all" // registers all the input/output handlers
@@ -25,6 +27,104 @@ var (
 	commit  = "none"
 	date    = "unknown"
 )
+
+
+// global cli options go here
+type Context struct {
+	Debug bool
+	Verbose bool
+	UserAgent string
+}
+
+type Convert struct {
+	OutputFilename string `default:"-" help:"Output filename, use '-' to write to stdout, use 'auto' to automatically generate a filename based on decklist metadata"`
+	OutputFormat string `default:"dck"`
+	CompatibilityMode bool `default:"false"`
+	SaveJSON bool `default:"false"`
+	Input string `arg:"" help:"file or URL path to input deck list"`
+	}
+func (c *Convert) Run(ctx *Context) error {
+	core.ConfigureLogging(ctx.Verbose)
+
+	// check the output format
+	format, err := core.ParseOutputFormat(c.OutputFormat)
+	if err != nil {
+		// log.Fatalf("Error: invalid output format: %v", err)
+		return &core.UnknownOutputFormat{Format: core.OutputFormat(c.OutputFormat)}
+	}
+
+	// create config object
+	config := core.Config{
+		Debug:          ctx.Debug,
+		Verbose:        ctx.Verbose,
+		OutputFilename: c.OutputFilename,
+		UserAgent:      ctx.UserAgent,
+		UrlString:      c.Input,
+		OutputFormat: format,
+		CompatibilityMode: c.CompatibilityMode,
+		SaveJSON: c.SaveJSON,
+	}
+
+	if c.OutputFilename == "auto" {
+		config.AutoFilename = true
+	}
+
+	// if we are doing debug run that instead and quit
+	if ctx.Debug {
+		slog.Debug("Starting DebugFunc from cmd/main.go")
+		core.DebugFunc(config)
+		return nil
+	}
+
+	// main entrypoint for the program
+	err = core.RunCLI(config)
+	if err != nil {
+		// log.Fatalf("error running program: %v", err)
+		return err
+	}
+
+	return nil
+}
+
+type Search struct {}
+func (s *Search) Run(ctx *Context) error {
+	return nil
+}
+
+type Version struct {}
+func (v *Version) Run(ctx *Context) error {
+	fmt.Printf("%s", version)
+	return nil
+}
+
+var cli struct {
+	// global options
+	Debug bool `help:"Enable debug mode."`
+	UserAgent string `help:"user token to use for web requests" default:"default-user-agent"`
+	Verbose bool `default:"false" help:"enable verbose logging"`
+
+	// subcommands
+	Version Version `cmd:"" help:"Print version information and quit"`
+	Convert Convert `cmd:"" help:"Convert a deck list to another format"`
+	Search Search `cmd:"" help:"Search for decks to output"`
+}
+
+func main() {
+  ctx := kong.Parse(&cli)
+  // Call the Run() method of the selected parsed command.
+  err := ctx.Run(&Context{UserAgent: cli.UserAgent, Debug: cli.Debug})
+  ctx.FatalIfErrorf(err)
+}
+
+
+
+
+
+
+
+// OLD CLI PARSING
+// TODO: REMOVE THIS
+
 
 // cli parser logic goes here
 // USAGE:
@@ -92,7 +192,7 @@ func PrintVersionAndQuit() {
 }
 
 // NOTE: log.Fatalf only in the cli interface ; 'return fmt.Errorf' in all other interfaces
-func main() {
+func main2() {
 	// get the cli args
 	config := parseCLI()
 	debug := config.Debug
