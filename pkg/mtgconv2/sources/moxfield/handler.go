@@ -121,6 +121,18 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 		return "", err
 	}
 
+	// save JSON to file if that was requested
+	if cfg.SaveJSON {
+		// indent the JSON for readability
+		pretty, err := core.PrettyJSON(jsonStr)
+		if err != nil {
+			return "", err
+		}
+		if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
+			return "", err
+		}
+	}
+
 	// convert to Go object
 	// slog.Debug("converting to Go object")
 	// result, err := MakeMoxfieldSeachResult(jsonStr)
