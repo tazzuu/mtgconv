@@ -8,7 +8,7 @@ type SourceHandler interface {
 	Source() APISource
 	Fetch(ctx context.Context, input string, cfg Config) (Deck, error)
 	// TODO: implement Search function here ; change this output type to []Deck
-	Search(ctx context.Context, cfg Config, scfg SearchConfig) (string, error)
+	Search(ctx context.Context, cfg Config, scfg SearchConfig) ([]DeckMeta, error)
 }
 
 type OutputHandler interface {

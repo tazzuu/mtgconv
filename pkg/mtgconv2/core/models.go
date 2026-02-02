@@ -49,6 +49,7 @@ type DeckMeta struct {
 	Bracket CommanderBracket
 	LikeCount int
 	ViewCount int
+	BookmarkCount int
 	CommentCount int
 	Version int
 	Source      APISource
@@ -87,3 +88,4 @@ type CardIDs struct {
 	TCGPlayerID   int
 	CardKingdomID int
 }
+

@@ -82,7 +82,7 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config) (core
 	// return core.Deck{}, fmt.Errorf("moxfield source handler not implemented")
 }
 
-func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchConfig) (string, error) {
+func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchConfig) ([]core.DeckMeta, error) {
 	_ = ctx
 	_ = cfg
 	slog.Debug("starting Moxfield Search")
@@ -92,7 +92,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	slog.Debug("building the http request")
 	req, err := http.NewRequest(http.MethodGet, MoxfieldDeckSearchUrl, nil)
 	if err != nil {
-		return "", err
+		return []core.DeckMeta{}, err
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", cfg.UserAgent)
@@ -100,7 +100,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	// start appending query params
 	q := req.URL.Query()
 	q.Add("pageNumber", "1")
-	q.Add("pageSize", "64")
+	q.Add("pageSize", "100")
 	q.Add("sortType", string(scfg.SortType))
 	q.Add("sortDirection", string(scfg.SortDirection))
 	q.Add("fmt", string(scfg.DeckFormat))
@@ -118,7 +118,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	slog.Debug("running the http request")
 	jsonStr, err := core.DoRequestJSON(req)
 	if err != nil {
-		return "", err
+		return []core.DeckMeta{}, err
 	}
 
 	// save JSON to file if that was requested
@@ -126,10 +126,10 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 		// indent the JSON for readability
 		pretty, err := core.PrettyJSON(jsonStr)
 		if err != nil {
-			return "", err
+			return []core.DeckMeta{}, err
 		}
 		if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
-			return "", err
+			return []core.DeckMeta{}, err
 		}
 	}
 
@@ -138,12 +138,22 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	result, err := MakeMoxfieldSeachResult(jsonStr)
 	if err != nil {
 		slog.Error("error parsing JSON", "err", err)
-		return "", err
+		return []core.DeckMeta{}, err
 	}
 
 	slog.Debug("get results", "nresults", len(result.Data))
 
-	return jsonStr, nil
+	// convert each search result to a core.DeckMeta
+	deckMetaList := []core.DeckMeta{}
+	for _, entry := range result.Data {
+		deckMeta, err := MoxfieldSearchResultToDeckMeta(entry)
+		if err != nil {
+			return []core.DeckMeta{}, err
+		}
+		deckMetaList = append(deckMetaList, deckMeta)
+	}
+
+	return deckMetaList, nil
 }
 
 func init() {

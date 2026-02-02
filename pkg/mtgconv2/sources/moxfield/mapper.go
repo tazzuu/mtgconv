@@ -100,3 +100,31 @@ func MoxfieldDeckToCoreDeck(mx MoxfieldDeck) (core.Deck, error) {
 
 	return deck, nil
 }
+
+func MoxfieldSearchResultToDeckMeta(mx MoxfieldDeckSearchResult) (core.DeckMeta, error) {
+	authors := []string{}
+	for _, author := range mx.Authors {
+		authors = append(authors, author.UserName)
+	}
+	meta := core.DeckMeta{
+			ID: mx.ID,
+			PublicID: mx.PublicId,
+			Name: mx.Name,
+			Format: mx.Format,
+			URL: mx.PublicUrl,
+			Date: mx.RetrievedAt,
+			CreatedAt: mx.CreatedAtUTC,
+			UpdatedAt: mx.LastUpdatedAtUTC,
+			Authors: authors,
+			Bracket: core.CommanderBracket(mx.Bracket),
+			LikeCount: mx.LikeCount,
+			ViewCount: mx.ViewCount,
+			BookmarkCount: mx.BookmarkCount,
+			CommentCount: mx.CommentCount,
+			// Visibility: result.V
+			// Description
+			// Version: result.V
+			// Source      APISource
+	}
+	return meta, nil
+}

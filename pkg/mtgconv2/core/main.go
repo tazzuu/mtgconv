@@ -66,9 +66,26 @@ func SearchCLI(config Config, searchConfig SearchConfig) error {
 	slog.Debug("configuring search settings")
 
 	slog.Debug("fetching data from source")
-	_, err = sourceHandler.Search(ctx, config, searchConfig)
+	result, err := sourceHandler.Search(ctx, config, searchConfig)
 	if err != nil {
 		return err
+	}
+
+	slog.Debug("retrieving deck list for each search result")
+	for i, entry := range result {
+		// update the main config with some default values
+		// TODO: find better way to implement this
+		newConfig := config
+		newConfig.AutoFilename = true
+		newConfig.OutputFilename = "auto"
+		newConfig.CompatibilityMode = true
+		newConfig.OutputFormat = OutputDCK
+		newConfig.UrlString = entry.URL
+		slog.Debug("retrieving deck", "i", i, "name", entry.Name, "url", entry.URL)
+		err := RunCLI(newConfig)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
