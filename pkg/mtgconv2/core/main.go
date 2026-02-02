@@ -66,11 +66,10 @@ func SearchCLI(config Config, searchConfig SearchConfig) error {
 	slog.Debug("configuring search settings")
 
 	slog.Debug("fetching data from source")
-	data, err := sourceHandler.Search(ctx, config, searchConfig)
+	_, err = sourceHandler.Search(ctx, config, searchConfig)
 	if err != nil {
 		return err
 	}
-	fmt.Println(data)
 
 	return nil
 }

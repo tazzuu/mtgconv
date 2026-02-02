@@ -17,15 +17,15 @@ func MakeMoxfieldDeck(jsonStr string) (MoxfieldDeck, error) {
 	return deck, nil
 }
 
-func MakeMoxfieldSeachResult(jsonStr string) ([]MoxfieldDeckSearchResult, error) {
-	var results []MoxfieldDeckSearchResult
+func MakeMoxfieldSeachResult(jsonStr string) (MoxfieldSearchResponse, error) {
+	var results MoxfieldSearchResponse
 	err := json.Unmarshal([]byte(jsonStr), &results)
 
 	if err != nil {
-		return []MoxfieldDeckSearchResult{}, err
+		return MoxfieldSearchResponse{}, err
 	}
-	for i, _ := range results {
-		results[i].RetrievedAt = time.Now()
+	for i, _ := range results.Data {
+		results.Data[i].RetrievedAt = time.Now()
 	}
 
 	return results, nil
@@ -203,7 +203,14 @@ type MoxfieldCard struct {
 	DefaultFinish     string `json:"defaultFinish"`
 }
 
+type MoxfieldSearchResponse struct {
+	PageNumber   int    `json:"pageNumber"`
+	PageSize     int    `json:"pageSize"`
+	TotalResults int    `json:"totalResults"`
+	TotalPages   int    `json:"totalPages"`
+	Data         []MoxfieldDeckSearchResult `json:"data"`
 
+}
 type MoxfieldDeckSearchResult struct {
 	ID string `json:"id"`
 	Name string `json:"name"`
@@ -213,6 +220,7 @@ type MoxfieldDeckSearchResult struct {
 	LikeCount int `json:"likeCount"`
 	ViewCount int `json:"viewCount"`
 	CommentCount int `json:"commentCount"`
+	BookmarkCount int `json:"bookmarkCount"`
 	CreatedByUser    MoxfieldUser   `json:"createdByUser"`
 	Authors          []MoxfieldUser `json:"authors"`
 	IsLegal bool `json:"isLegal"`
