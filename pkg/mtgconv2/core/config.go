@@ -25,4 +25,5 @@ type SearchConfig struct {
 	MaxBracket CommanderBracket
 	SortDirection SortDirection
 	DeckFormat DeckFormat
+	Username string
 }

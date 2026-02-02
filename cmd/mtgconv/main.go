@@ -86,8 +86,29 @@ func (c *Convert) Run(ctx *Context) error {
 	return nil
 }
 
-type Search struct {}
+type Search struct {
+	Input string `arg:"" default:"https://moxfield.com" help:"URL domain to search for decks"`
+}
 func (s *Search) Run(ctx *Context) error {
+	core.ConfigureLogging(ctx.Verbose)
+	slog.Debug("starting cli search")
+	searchConfig, err := core.DefaultSearchConfig()
+	if err != nil {
+		return err
+	}
+	slog.Debug("got search config", "searchConfig", searchConfig)
+
+	config := core.Config{
+		UrlString: s.Input,
+		Debug:          ctx.Debug,
+		Verbose:        ctx.Verbose,
+		UserAgent:      ctx.UserAgent,
+	}
+	slog.Debug("got config", "config", config)
+	err = core.SearchCLI(config, searchConfig)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -112,7 +133,11 @@ var cli struct {
 func main() {
   ctx := kong.Parse(&cli)
   // Call the Run() method of the selected parsed command.
-  err := ctx.Run(&Context{UserAgent: cli.UserAgent, Debug: cli.Debug})
+  err := ctx.Run(&Context{
+	UserAgent: cli.UserAgent,
+	Debug: cli.Debug,
+	Verbose: cli.Verbose,
+	})
   ctx.FatalIfErrorf(err)
 }
 

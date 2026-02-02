@@ -106,6 +106,10 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	q.Add("fmt", string(scfg.DeckFormat))
 	q.Add("minBracket", scfg.MinBracket.String())
 	q.Add("maxBracket", scfg.MaxBracket.String())
+	if scfg.Username != "" {
+		q.Add("authorUserNames", scfg.Username)
+		// TODO: for username search also include these ; includePinned=true showIllegal=true board=mainboard
+	}
 	req.URL.RawQuery = q.Encode()
 
 	slog.Debug("got query URL", "url", req.URL.String())
@@ -118,13 +122,13 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	}
 
 	// convert to Go object
-	slog.Debug("converting to Go object")
-	result, err := MakeMoxfieldSeachResult(jsonStr)
-	if err != nil {
-		slog.Error("error parsing JSON", "err", err)
-		return "", err
-	}
-	slog.Debug("got result", "result", result)
+	// slog.Debug("converting to Go object")
+	// result, err := MakeMoxfieldSeachResult(jsonStr)
+	// if err != nil {
+	// 	slog.Error("error parsing JSON", "err", err)
+	// 	return "", err
+	// }
+	// slog.Debug("got result", "result", result)
 
 	return jsonStr, nil
 }

@@ -47,3 +47,30 @@ func RunCLI(config Config) (err error) {
 
 	return err
 }
+
+// TODO: move this somewhere else
+func SearchCLI(config Config, searchConfig SearchConfig) error {
+	ctx := context.Background()
+	slog.Debug("starting processing pipeline")
+	src, err := DetectURLSource(config.UrlString)
+	if err != nil {
+		return err
+	}
+
+	slog.Debug("configuring source handler")
+	sourceHandler, err := HandlerForSource(src)
+	if err != nil {
+		return err
+	}
+
+	slog.Debug("configuring search settings")
+
+	slog.Debug("fetching data from source")
+	data, err := sourceHandler.Search(ctx, config, searchConfig)
+	if err != nil {
+		return err
+	}
+	fmt.Println(data)
+
+	return nil
+}

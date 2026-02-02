@@ -109,6 +109,8 @@ func ParseSortType(raw string) (SortType, error) {
 		return SortLikes, nil
 	case string(SortViews):
 		return SortViews, nil
+	case string(SortUpdated):
+		return SortUpdated, nil
 	default:
 		return "", &UnknownSortType{raw}
 	}

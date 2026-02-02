@@ -48,6 +48,7 @@ type SortType string
 const (
 	SortLikes SortType = "likes"
 	SortViews SortType = "views"
+	SortUpdated SortType = "updated"
 )
 
 type CommanderBracket int
