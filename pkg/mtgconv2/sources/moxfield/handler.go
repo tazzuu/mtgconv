@@ -114,6 +114,11 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 
 	slog.Debug("got query URL", "url", req.URL.String())
 
+	// wait the required amount of time
+	if err := MoxfieldAPIRateLimiter.Wait(ctx); err != nil {
+		return []core.DeckMeta{}, err
+	}
+
 	// run the http request
 	slog.Debug("running the http request")
 	jsonStr, err := core.DoRequestJSON(req)

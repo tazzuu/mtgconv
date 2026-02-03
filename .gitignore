@@ -4,3 +4,4 @@ build
 *.dck
 mtgconv
 response.json
+.DS_Store

@@ -5,6 +5,7 @@ import (
 	"os"
 	"log/slog"
 	"context"
+	"path/filepath"
 )
 
 // main entrypoint for the program when running from the cli
@@ -25,11 +26,25 @@ func RunCLI(config Config) (err error) {
 	if config.OutputFilename == "-" || config.OutputFilename == "" {
 		out = os.Stdout
 	} else {
+		// check if output directory was passed
+		if config.OutputDir != "" {
+			// make the output dir
+			slog.Debug("creating output directory", "OutputDir", config.OutputDir)
+			err := os.MkdirAll(config.OutputDir, os.ModePerm)
+			if err != nil {
+				return err
+			}
+		}
 		// auto generate a filename
 		var outputFilename string = config.OutputFilename
 		if config.AutoFilename == true {
 			outputFilename = GenerateSafeFilename(config, deck)
 		}
+		// add the output dir name
+		if config.OutputDir != "" {
+			outputFilename = filepath.Join(config.OutputDir, outputFilename)
+		}
+		slog.Debug("resolved final output filename", "outputFilename", outputFilename)
 		out, err = os.Create(outputFilename)
 		if err != nil {
 			return err
@@ -41,6 +56,7 @@ func RunCLI(config Config) (err error) {
 			}
 		}()
 	}
+	slog.Debug("saving to output file", "out", out.Name())
 	if _, err := fmt.Fprintln(out, output); err != nil {
 		return err
 	}
@@ -78,6 +94,7 @@ func SearchCLI(config Config, searchConfig SearchConfig) error {
 		newConfig := config
 		newConfig.AutoFilename = true
 		newConfig.OutputFilename = "auto"
+		newConfig.OutputDir = "searched-decks"
 		newConfig.CompatibilityMode = true
 		newConfig.OutputFormat = OutputDCK
 		newConfig.UrlString = entry.URL

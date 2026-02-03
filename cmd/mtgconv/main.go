@@ -39,6 +39,7 @@ type Context struct {
 
 type Convert struct {
 	OutputFilename string `default:"-" help:"Output filename, use '-' to write to stdout, use 'auto' to automatically generate a filename based on decklist metadata"`
+	OutputDir string `default:"converted-decks" help:"output directory name"`
 	OutputFormat string `default:"dck"`
 	CompatibilityMode bool `default:"false"`
 	Input string `arg:"" help:"file or URL path to input deck list"`
@@ -58,6 +59,7 @@ func (c *Convert) Run(ctx *Context) error {
 		Debug:          ctx.Debug,
 		Verbose:        ctx.Verbose,
 		OutputFilename: c.OutputFilename,
+		OutputDir: c.OutputDir,
 		UserAgent:      ctx.UserAgent,
 		UrlString:      c.Input,
 		OutputFormat: format,

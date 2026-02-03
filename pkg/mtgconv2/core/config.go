@@ -10,6 +10,7 @@ type Config struct {
 	CompatibilityMode bool // enable compatibility mode for modified output
 	Version        string // the current version of the program
 	OutputFilename string // output file name
+	OutputDir string // output directory name
 	OutputFormat   OutputFormat
 	UserAgent      string // user agent token string for web requests
 	UrlString      string // user supplied URL to query for decklist
