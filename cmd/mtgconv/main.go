@@ -29,19 +29,19 @@ var (
 )
 
 
-// global cli options go here
+// global options go here ; add them to the 'cli' struct below
 type Context struct {
 	Debug bool
 	Verbose bool
 	UserAgent string
 	SaveJSON bool
+	OutputDir string
+	CompatibilityMode bool
 }
 
 type Convert struct {
 	OutputFilename string `default:"-" help:"Output filename, use '-' to write to stdout, use 'auto' to automatically generate a filename based on decklist metadata"`
-	OutputDir string `default:"converted-decks" help:"output directory name"`
 	OutputFormat string `default:"dck"`
-	CompatibilityMode bool `default:"false"`
 	Input string `arg:"" help:"file or URL path to input deck list"`
 	}
 func (c *Convert) Run(ctx *Context) error {
@@ -59,11 +59,11 @@ func (c *Convert) Run(ctx *Context) error {
 		Debug:          ctx.Debug,
 		Verbose:        ctx.Verbose,
 		OutputFilename: c.OutputFilename,
-		OutputDir: c.OutputDir,
+		OutputDir: ctx.OutputDir,
 		UserAgent:      ctx.UserAgent,
 		UrlString:      c.Input,
 		OutputFormat: format,
-		CompatibilityMode: c.CompatibilityMode,
+		CompatibilityMode: ctx.CompatibilityMode,
 		SaveJSON: ctx.SaveJSON,
 	}
 
@@ -106,6 +106,7 @@ func (s *Search) Run(ctx *Context) error {
 		Verbose:        ctx.Verbose,
 		UserAgent:      ctx.UserAgent,
 		SaveJSON: ctx.SaveJSON,
+		OutputDir: ctx.OutputDir,
 	}
 	slog.Debug("got config", "config", config)
 	err = core.SearchCLI(config, searchConfig)
@@ -127,6 +128,8 @@ var cli struct {
 	UserAgent string `help:"user token to use for web requests" default:"default-user-agent"`
 	Verbose bool `default:"false" help:"enable verbose logging"`
 	SaveJSON bool `default:"false" help:"save API request JSON for inspection"`
+	OutputDir string `default:"converted-decks" help:"output directory name"`
+	CompatibilityMode bool `default:"false" help:"apply compatibility formatting for deck list output formats where applicable to help when importing the deck lists into various programs"`
 
 	// subcommands
 	Version Version `cmd:"" help:"Print version information and quit"`
@@ -142,6 +145,8 @@ func main() {
 	Debug: cli.Debug,
 	Verbose: cli.Verbose,
 	SaveJSON: cli.SaveJSON,
+	OutputDir: cli.OutputDir,
+	CompatibilityMode: cli.CompatibilityMode,
 	})
   ctx.FatalIfErrorf(err)
 }

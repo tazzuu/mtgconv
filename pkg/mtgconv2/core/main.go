@@ -94,7 +94,6 @@ func SearchCLI(config Config, searchConfig SearchConfig) error {
 		newConfig := config
 		newConfig.AutoFilename = true
 		newConfig.OutputFilename = "auto"
-		newConfig.OutputDir = "searched-decks"
 		newConfig.CompatibilityMode = true
 		newConfig.OutputFormat = OutputDCK
 		newConfig.UrlString = entry.URL
