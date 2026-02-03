@@ -4,6 +4,9 @@ import (
 	"strconv"
 )
 
+// object type to use for passing the program build info to internal components
+type BuildInfo struct{ Version, Commit, Date, Program string }
+
 // designation for various API domains that we can query
 type APISource string
 

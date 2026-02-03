@@ -7,7 +7,7 @@ tidy:
 	go mod tidy
 
 # cli interface for the program
-SRC:=cmd/mtgconv/main.go
+SRC:=cmd/mtgconv
 
 
 test:
@@ -33,7 +33,7 @@ build-all:
 	output="build/$(BIN)-v$(GIT_TAG)-$$os-$$arch" ; \
 	if [ "$${os}" == "windows" ]; then output="$${output}.exe"; fi ; \
 	echo "building: $$output" ; \
-	CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build  -ldflags="-X 'main.version=$(GIT_TAG)'" -trimpath -o "$${output}" $(SRC) ; \
+	CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build  -ldflags="-X 'main.version=$(GIT_TAG)'" -trimpath -o "$${output}" ./$(SRC) ; \
 	done ; \
 	done
 

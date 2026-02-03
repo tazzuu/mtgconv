@@ -223,34 +223,3 @@ func SplitMultiFaceName(raw string) []string {
 	return parts
 }
 
-// returns a Search Config with default settings
-func DefaultSearchConfig() (SearchConfig, error) {
-	sortType, err := ParseSortType("likes")
-	if err != nil {
-		return SearchConfig{}, err
-	}
-	minBracket, err := ParseBracket(1)
-	if err != nil {
-		return SearchConfig{}, err
-	}
-	maxBracket, err := ParseBracket(5)
-	if err != nil {
-		return SearchConfig{}, err
-	}
-	sortDirection, err := ParseSortDirection("descending")
-	if err != nil {
-		return SearchConfig{}, err
-	}
-	deckFormat, err := ParseDeckFormat("commander")
-	if err != nil {
-		return SearchConfig{}, err
-	}
-	config := SearchConfig{
-		SortType: sortType,
-		MinBracket: minBracket,
-		MaxBracket: maxBracket,
-		SortDirection: sortDirection,
-		DeckFormat: deckFormat,
-	}
-	return config, nil
-}

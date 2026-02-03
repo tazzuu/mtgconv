@@ -8,7 +8,7 @@ type Config struct {
 	Verbose        bool   // enable verbose logging
 	PrintVersion   bool   // print version and quit
 	CompatibilityMode bool // enable compatibility mode for modified output
-	Version        string // the current version of the program
+	Version        string // the current version of the program TODO: replace this with BuildInfo
 	OutputFilename string // output file name
 	OutputDir string // output directory name
 	OutputFormat   OutputFormat
@@ -16,8 +16,20 @@ type Config struct {
 	UrlString      string // user supplied URL to query for decklist
 	AutoFilename bool // automatically create an output filename
 	SaveJSON bool // save a copy of the API response JSON
+	Build BuildInfo // current build of the program
 }
 
+// create an empty Config with default values
+// NOTE: This is intended for internal package usage; the CLI interface should update the config with different defaults!
+func DefaultConfig(build BuildInfo) Config {
+	return Config{
+		// Version: false,
+		OutputFilename: "auto",
+		AutoFilename: true,
+		OutputFormat: OutputDCK,
+		Build: build,
+	}
+}
 
 // config for doing deck searches
 type SearchConfig struct {
@@ -27,4 +39,17 @@ type SearchConfig struct {
 	SortDirection SortDirection
 	DeckFormat DeckFormat
 	Username string
+}
+
+// returns a Search Config with default settings
+// NOTE: This is intended for internal package usage; the CLI interface should update the config with different defaults!
+func DefaultSearchConfig() SearchConfig {
+	config := SearchConfig{
+		SortType: SortLikes,
+		MinBracket: CommanderBracket1,
+		MaxBracket: CommanderBracket5,
+		SortDirection: SortDesc,
+		DeckFormat: DeckFormatCommander,
+	}
+	return config
 }
