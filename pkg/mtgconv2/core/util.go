@@ -138,6 +138,8 @@ func ParseDeckFormat(raw string) (DeckFormat, error) {
 
 func ParseBracket(raw int) (CommanderBracket, error) {
 	switch raw {
+	case 0: // unset Bracket defaults to Bracket 1
+		return CommanderBracket1, nil
 	case int(CommanderBracket1):
 		return CommanderBracket1, nil
 	case int(CommanderBracket2):
@@ -180,13 +182,13 @@ func SanitizeFilename(name string) string {
 }
 
 // return a safe formatted filename with embedded metadata and file extension
-func GenerateSafeFilename(config Config, deck Deck) string {
+func GenerateSafeFilename(name string, version int, extension string) string {
 	// NOTE: removed date // deck.Meta.Date.Format("20060102"), so that we can re-export more easily
 	var output string = fmt.Sprintf(
 		"%s_v%d.%s",
-		SanitizeFilename(deck.Meta.Name),
-		deck.Meta.Version,
-		config.OutputFormat)
+		SanitizeFilename(name),
+		version,
+		extension)
 	return output
 }
 

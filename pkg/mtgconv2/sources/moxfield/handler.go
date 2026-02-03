@@ -17,7 +17,7 @@ func (h Handler) Source() core.APISource {
 	return core.SourceMoxfield
 }
 
-func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config) (core.Deck, error) {
+func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr core.DeckMeta) (core.Deck, error) {
 	_ = ctx
 	_ = input
 	_ = cfg
@@ -79,6 +79,11 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config) (core
 		return deck, err
 	}
 
+	// apply some meta data overrides
+	if ovrr.Bracket != 0 {
+		deck.Meta.Bracket = ovrr.Bracket
+	}
+
 	return deck, nil
 	// return core.Deck{}, fmt.Errorf("moxfield source handler not implemented")
 }
@@ -90,7 +95,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	slog.Debug("Got search config", "scfg", scfg)
 
 	var pageStart int = 1
-	var pageEnd int = 3
+	var pageEnd int = 5
 	deckMetaList := []core.DeckMeta{}
 	for page := pageStart; page <= pageEnd; page++ {
 		// start building http request
@@ -154,7 +159,6 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 		slog.Debug("get results","page", page, "nresults", len(result.Data))
 
 		// convert each search result to a core.DeckMeta
-
 		for _, entry := range result.Data {
 			deckMeta, err := MoxfieldSearchResultToDeckMeta(entry)
 			if err != nil {

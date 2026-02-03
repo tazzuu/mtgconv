@@ -61,7 +61,7 @@ func (c *Convert) Run(ctx *Context) error {
 	}
 
 	// main entrypoint for the program
-	err = core.RunCLI(config)
+	err = core.RunCLI(config, core.DeckMeta{})
 	if err != nil {
 		// log.Fatalf("error running program: %v", err)
 		return err

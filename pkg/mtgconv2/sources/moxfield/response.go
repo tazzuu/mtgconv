@@ -33,6 +33,7 @@ func MakeMoxfieldSeachResult(jsonStr string) (MoxfieldSearchResponse, error) {
 
 // object type representing the fields present in the Moxfield API response
 // NOTE: there are a lot more fields I have not included here
+// NOTE: Bracket is only returned in Search result not Fetch result
 type MoxfieldDeck struct {
 	ID                 string `json:"id"`
 	Name               string `json:"name"`
@@ -231,7 +232,7 @@ type MoxfieldDeckSearchResult struct {
 	MaybeboardCount int `json:"maybeboardCount"`
 	Colors []string `json:"colors"`
 	Bracket int `json:"bracket"`
-	UserBracket int `json:"userBracket"`
+	UserBracket int `json:"userBracket"` // only present if the user selected a bracket
 	AutoBracket int `json:"autoBracket"`
 	RetrievedAt time.Time
 }

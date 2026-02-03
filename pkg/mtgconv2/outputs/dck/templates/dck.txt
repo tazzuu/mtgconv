@@ -2,6 +2,7 @@
 Name={{ .Meta.Name }}
 Description={{ .Meta.Description }}
 Format={{ .Meta.Format }}
+Bracket={{ .Meta.Bracket | ParseBracket | ParseInt }}
 Author={{ .Meta | CollectAuthors }}
 Version={{ .Meta.Version }}
 URL={{ .Meta.URL }}

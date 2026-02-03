@@ -6,7 +6,7 @@ import (
 )
 
 // runs the main data conversion pipeline using the input and output handlers selected
-func Run(ctx context.Context, cfg Config) (string, Deck, error) {
+func Run(ctx context.Context, cfg Config, deckMetaOverride DeckMeta) (string, Deck, error) {
 	slog.Debug("starting processing pipeline")
 	src, err := DetectURLSource(cfg.UrlString)
 	if err != nil {
@@ -20,7 +20,7 @@ func Run(ctx context.Context, cfg Config) (string, Deck, error) {
 	}
 
 	slog.Debug("fetching data from source")
-	deck, err := sourceHandler.Fetch(ctx, cfg.UrlString, cfg)
+	deck, err := sourceHandler.Fetch(ctx, cfg.UrlString, cfg, deckMetaOverride)
 	if err != nil {
 		return "", Deck{}, err
 	}

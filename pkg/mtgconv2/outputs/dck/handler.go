@@ -3,6 +3,7 @@ package dck
 import (
 	"strings"
 	"log/slog"
+	"strconv"
 
 	_ "embed"
 	"text/template"
@@ -43,6 +44,12 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 		},
 		"FormatDckLine": func(entry core.DeckEntry) string {
 			return FormatDckLine(entry, compatibilityMode)
+		},
+		"ParseBracket": func(bracket core.CommanderBracket) int {
+			return int(bracket)
+		},
+		"ParseInt": func(i int) string {
+			return strconv.Itoa(i)
 		},
 		// cheat in some config meta values
 		"ProgramName": func() string {

@@ -102,9 +102,14 @@ func MoxfieldDeckToCoreDeck(mx MoxfieldDeck) (core.Deck, error) {
 }
 
 func MoxfieldSearchResultToDeckMeta(mx MoxfieldDeckSearchResult) (core.DeckMeta, error) {
+	// slog.Debug("converting MoxfieldDeckSearchResult to DeckMeta", "MoxfieldDeckSearchResult", mx)
 	authors := []string{}
 	for _, author := range mx.Authors {
 		authors = append(authors, author.UserName)
+	}
+	bracket, err := core.ParseBracket(mx.Bracket)
+	if err != nil {
+		return core.DeckMeta{}, err
 	}
 	meta := core.DeckMeta{
 			ID: mx.ID,
@@ -116,7 +121,7 @@ func MoxfieldSearchResultToDeckMeta(mx MoxfieldDeckSearchResult) (core.DeckMeta,
 			CreatedAt: mx.CreatedAtUTC,
 			UpdatedAt: mx.LastUpdatedAtUTC,
 			Authors: authors,
-			Bracket: core.CommanderBracket(mx.Bracket),
+			Bracket: bracket,
 			LikeCount: mx.LikeCount,
 			ViewCount: mx.ViewCount,
 			BookmarkCount: mx.BookmarkCount,

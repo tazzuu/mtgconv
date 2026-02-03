@@ -11,43 +11,58 @@ import (
 // main entrypoint for the program when running from the cli
 // TODO: move this back into the cmd/main.go instead
 // TODO: API connectivity check
-func RunCLI(config Config) (err error) {
+func RunCLI(config Config, deckMetaOverride DeckMeta) (err error) {
 	slog.Debug("got config", "config", config)
 
 	// run the main pipeline with the given config
 	slog.Info("Starting deck import pipeline", "input", config.UrlString)
-	output, deck, err := Run(context.Background(), config)
+	output, deck, err := Run(context.Background(), config, deckMetaOverride)
 	if err != nil {
 		slog.Error("error running deck processing pipeline", "err", err)
 		return err
 	}
 
-	// decide where to print the output
+	err = CreateOutput(
+		output,
+		config.OutputFilename,
+		config.OutputDir,
+		config.AutoFilename,
+		deck.Meta.Name,
+		deck.Meta.Version,
+		string(config.OutputFormat),
+	)
+
+	return err
+}
+
+// decide where to print the output
+func CreateOutput(contents string, outputFilename string, outputDir string, autoFilename bool, deckName string, deckVersion int, fileExtension string) error {
 	var out *os.File
+	var err error
 	// print to stdout if - or empty string passed
-	if config.OutputFilename == "-" || config.OutputFilename == "" {
+	if outputFilename == "-" || outputFilename == "" {
 		out = os.Stdout
 	} else {
 		// check if output directory was passed
-		if config.OutputDir != "" {
+		if outputDir != "" {
 			// make the output dir
-			slog.Debug("creating output directory", "OutputDir", config.OutputDir)
-			err := os.MkdirAll(config.OutputDir, os.ModePerm)
+			slog.Debug("creating output directory", "OutputDir", outputDir)
+			err := os.MkdirAll(outputDir, os.ModePerm)
 			if err != nil {
 				return err
 			}
 		}
 		// auto generate a filename
-		var outputFilename string = config.OutputFilename
-		if config.AutoFilename == true {
-			outputFilename = GenerateSafeFilename(config, deck)
+		var cleanedOutputFilename string = outputFilename
+		if autoFilename == true {
+			cleanedOutputFilename = GenerateSafeFilename(deckName, deckVersion, fileExtension)
 		}
 		// add the output dir name
-		if config.OutputDir != "" {
-			outputFilename = filepath.Join(config.OutputDir, outputFilename)
+		if outputDir != "" {
+			cleanedOutputFilename = filepath.Join(outputDir, cleanedOutputFilename)
 		}
-		slog.Debug("resolved final output filename", "outputFilename", outputFilename)
-		out, err = os.Create(outputFilename)
+		slog.Debug("resolved final output filename", "outputFilename", cleanedOutputFilename)
+		out, err = os.Create(cleanedOutputFilename)
 		if err != nil {
 			return err
 		}
@@ -59,11 +74,11 @@ func RunCLI(config Config) (err error) {
 		}()
 	}
 	slog.Info("saving to output file", "out", out.Name())
-	if _, err := fmt.Fprintln(out, output); err != nil {
+	if _, err := fmt.Fprintln(out, contents); err != nil {
 		return err
 	}
 
-	return err
+	return nil
 }
 
 // TODO: move this somewhere else
@@ -101,7 +116,8 @@ func SearchCLI(config Config, searchConfig SearchConfig) error {
 		newConfig.OutputFormat = OutputDCK
 		newConfig.UrlString = entry.URL
 		slog.Debug("retrieving deck", "i", i, "name", entry.Name, "url", entry.URL)
-		err := RunCLI(newConfig)
+		// NOTE: need to inject some extra meta because some meta is only returned by Search and not Fetch
+		err := RunCLI(newConfig, DeckMeta{Bracket: entry.Bracket})
 		if err != nil {
 			return err
 		}
