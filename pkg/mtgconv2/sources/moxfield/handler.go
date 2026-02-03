@@ -94,8 +94,8 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	slog.Debug("starting Moxfield Search")
 	slog.Debug("Got search config", "scfg", scfg)
 
-	var pageStart int = 1
-	var pageEnd int = 5
+	var pageStart int = scfg.PageStart
+	var pageEnd int = scfg.PageEnd
 	deckMetaList := []core.DeckMeta{}
 	for page := pageStart; page <= pageEnd; page++ {
 		// start building http request

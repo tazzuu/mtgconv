@@ -30,7 +30,7 @@ type Context struct {
 // subcommand for converting a single deck into a different format
 type Convert struct {
 	OutputFilename string `default:"-" help:"Output filename, use '-' to write to stdout, use 'auto' to automatically generate a filename based on decklist metadata"`
-	OutputFormat string `default:"dck"`
+	OutputFormat string `default:"${ConvertOutputFormatDefault}" enum:"${ConvertOutputFormatOptions}" help:"Output deck list format, options: ${ConvertOutputFormatOptions}"`
 	Input string `arg:"" help:"file or URL path to input deck list"`
 	}
 func (c *Convert) Run(ctx *Context) error {
@@ -72,12 +72,33 @@ func (c *Convert) Run(ctx *Context) error {
 
 // subcommand for searching for decks and outputting them in a specified format
 type Search struct {
-	Input string `arg:"" default:"https://moxfield.com" help:"URL domain to search for decks"`
+	Input string `arg:"" default:"${SearchAPIDefault}" help:"URL domain to search for decks, default;${SearchAPIDefault} options;${SearchAPISources}"`
+	PageStart int `default:"1"`
+	PageEnd int `default:"1"`
+	SortType string `default:"${SearchSortTypeDefault}" enum:"${SearchSortTypes}" help:"Type of sorting to apply to search results, options: ${SearchSortTypes}"`
+	SortDirection string `default:"${SearchSortDirectionDefault}" enum:"${SearchSortDirections}" help:"Search sort direction, options: ${SearchSortDirections}"`
+	DeckFormat string `default:"${SearchDeckFormatDefault}" enum:"${SearchDeckFormats}" help:"Search deck formats, options: ${SearchDeckFormats}"`
+	MinBracket int `default:"${SeachMinBracketDefault}" enum:"${SearchDeckBrackets}" help:"Deck bracket level, options: ${SearchDeckBrackets}"`
+	MaxBracket int `default:"${SeachMaxBracketDefault}" enum:"${SearchDeckBrackets}" help:"Deck bracket level, options: ${SearchDeckBrackets}"`
+	Username string `default:"" help:"Filter search by the given username"`
 }
 func (s *Search) Run(ctx *Context) error {
 	core.ConfigureLogging(ctx.Verbose)
 	slog.Debug("starting cli search")
+
+	// initialize default search config
 	searchConfig := core.DefaultSearchConfig()
+
+	// override with cli options
+	searchConfig.DeckFormat = core.DeckFormat(s.DeckFormat)
+	searchConfig.MaxBracket = core.CommanderBracket(s.MaxBracket)
+	searchConfig.MinBracket = core.CommanderBracket(s.MinBracket)
+	searchConfig.SortDirection = core.SortDirection(s.SortDirection)
+	searchConfig.SortType = core.SortType(s.SortType)
+	searchConfig.Username = s.Username
+	searchConfig.PageStart = s.PageStart
+	searchConfig.PageEnd = s.PageEnd
+
 	slog.Debug("got search config", "searchConfig", searchConfig)
 
 	// create config object
@@ -116,7 +137,21 @@ var cli struct {
 }
 
 func main() {
-  ctx := kong.Parse(&cli)
+  ctx := kong.Parse(&cli, kong.Vars{
+	"ConvertOutputFormatDefault": string(core.OutputDCK),
+	"ConvertOutputFormatOptions": OutputFormats(),
+	"SearchSortTypeDefault":string(core.SortLikes),
+	"SearchSortDirectionDefault":string(core.SortDesc),
+	"SearchDeckFormatDefault":core.DeckFormatCommander,
+	"SeachMinBracketDefault":core.CommanderBracket1.String(),
+	"SeachMaxBracketDefault":core.CommanderBracket5.String(),
+	"SearchDeckBrackets": DeckBrackets(),
+	"SearchSortDirections":SortDirections(),
+	"SearchSortTypes": SearchSortTypes(),
+	"SearchDeckFormats": SearchDeckFormats(),
+	"SearchAPIDefault": string(core.SourceMoxfield),
+	"SearchAPISources": SearchAPISources(),
+  })
   // Call the Run() method of the selected parsed command.
   err := ctx.Run(&Context{
 	UserAgent: cli.UserAgent,

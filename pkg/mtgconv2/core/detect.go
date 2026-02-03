@@ -3,11 +3,16 @@ package core
 import (
 	"log/slog"
 	"net/url"
+	"strings"
 )
 
 // determine which API source was provided based on the input URL
 func DetectURLSource(urlStr string) (APISource, error) {
 	slog.Debug("parsing domain for URL", "urlStr", urlStr)
+
+	if !strings.Contains(urlStr, "://") {
+		urlStr = "https://" + urlStr
+	}
 
 	u, err := url.Parse(urlStr)
 	if err != nil {

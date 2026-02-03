@@ -39,6 +39,8 @@ type SearchConfig struct {
 	SortDirection SortDirection
 	DeckFormat DeckFormat
 	Username string
+	PageStart int
+	PageEnd int
 }
 
 // returns a Search Config with default settings
@@ -50,6 +52,8 @@ func DefaultSearchConfig() SearchConfig {
 		MaxBracket: CommanderBracket5,
 		SortDirection: SortDesc,
 		DeckFormat: DeckFormatCommander,
+		PageStart: 1,
+		PageEnd: 1,
 	}
 	return config
 }
