@@ -83,11 +83,12 @@ func SearchCLI(config Config, searchConfig SearchConfig) error {
 
 	slog.Debug("configuring search settings")
 
-	slog.Debug("fetching data from source")
+	slog.Info("searching for decks", "source", src)
 	result, err := sourceHandler.Search(ctx, config, searchConfig)
 	if err != nil {
 		return err
 	}
+	slog.Info("got search results", "n", len(result))
 
 	slog.Debug("retrieving deck list for each search result")
 	for i, entry := range result {
