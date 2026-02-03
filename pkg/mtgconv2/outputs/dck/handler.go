@@ -44,6 +44,13 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 		"FormatDckLine": func(entry core.DeckEntry) string {
 			return FormatDckLine(entry, compatibilityMode)
 		},
+		// cheat in some config meta values
+		"ProgramName": func() string {
+			return cfg.Build.Program
+		},
+		"ProgramVersion": func() string {
+			return cfg.Build.Version
+		},
 	}
 
 	tmpl, err := template.New("dck").Funcs(funcMap).Parse(dckTemplateStr)

@@ -1,13 +1,15 @@
 [metadata]
 Name={{ .Meta.Name }}
-URL={{ .Meta.URL }}
-Date={{ .Meta.Date | ConvertDate }}
 Description={{ .Meta.Description }}
 Format={{ .Meta.Format }}
 Author={{ .Meta | CollectAuthors }}
+Version={{ .Meta.Version }}
+URL={{ .Meta.URL }}
+Date={{ .Meta.UpdatedAt }}
 Created={{ .Meta.CreatedAt }}
 Updated={{ .Meta.UpdatedAt }}
-Version={{ .Meta.Version }}
+Retrieved={{ .Meta.Date | ConvertDate }}
+ExportedBy={{ ProgramName }} v{{ ProgramVersion }}
 
 [Commander]
 {{ range $key, $value := . | CollectCommanders }}{{ $value | FormatDckLine }}
