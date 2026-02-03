@@ -153,29 +153,44 @@ func ParseBracket(raw int) (CommanderBracket, error) {
 	}
 }
 
+// regex to match and non-alphanumeric characters
 var safeFileRe = regexp.MustCompile(`[^A-Za-z0-9._-]+`)
 
+// return a name that is safe for use as an output filename
 func SanitizeFilename(name string) string {
+	// remove leading and trailing whitespace
 	n := strings.TrimSpace(name)
+	// if empty string just return the name 'deck'
 	if n == "" {
 		return "deck"
 	}
+	// replace all non-alphanumeric characters with _
 	n = safeFileRe.ReplaceAllString(n, "_")
+	// trim excess leading and trailing characters
 	n = strings.Trim(n, "._-")
+	// double check that string is not empty
 	if n == "" {
 		return "deck"
 	}
+	// truncate to 120 characters
 	if len(n) > 120 {
 		n = n[:120]
 	}
 	return n
 }
 
+// return a safe formatted filename with embedded metadata and file extension
 func GenerateSafeFilename(config Config, deck Deck) string {
-	var output string = fmt.Sprintf("%s_v%d_%s.%s", SanitizeFilename(deck.Meta.Name), deck.Meta.Version, deck.Meta.Date.Format("20060102"), config.OutputFormat)
+	// NOTE: removed date // deck.Meta.Date.Format("20060102"), so that we can re-export more easily
+	var output string = fmt.Sprintf(
+		"%s_v%d.%s",
+		SanitizeFilename(deck.Meta.Name),
+		deck.Meta.Version,
+		config.OutputFormat)
 	return output
 }
 
+// returns indented JSON
 func PrettyJSON(raw string) (string, error) {
     var out bytes.Buffer
     if err := json.Indent(&out, []byte(raw), "", "  "); err != nil {
@@ -184,7 +199,7 @@ func PrettyJSON(raw string) (string, error) {
     return out.String(), nil
 }
 
-
+// saves text to a file
 func SaveTxtToFile(filename string, input string) error {
 	out, err := os.Create(filename)
 	if err != nil {
@@ -199,7 +214,7 @@ func SaveTxtToFile(filename string, input string) error {
 }
 
 
-// if the card has // in the name, return the parts
+// if the card name has '//' in it, return the parts
 func SplitMultiFaceName(raw string) []string {
 	parts := strings.Split(raw, "//")
 	for i := range parts {

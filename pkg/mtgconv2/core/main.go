@@ -12,8 +12,10 @@ import (
 // TODO: move this back into the cmd/main.go instead
 // TODO: API connectivity check
 func RunCLI(config Config) (err error) {
-	slog.Debug("Running RunCLI mtgconv2.core", "config", config)
+	slog.Debug("got config", "config", config)
+
 	// run the main pipeline with the given config
+	slog.Info("Starting deck import pipeline", "input", config.UrlString)
 	output, deck, err := Run(context.Background(), config)
 	if err != nil {
 		slog.Error("error running deck processing pipeline", "err", err)
@@ -56,7 +58,7 @@ func RunCLI(config Config) (err error) {
 			}
 		}()
 	}
-	slog.Debug("saving to output file", "out", out.Name())
+	slog.Info("saving to output file", "out", out.Name())
 	if _, err := fmt.Fprintln(out, output); err != nil {
 		return err
 	}
