@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"log/slog"
+	"strconv"
 
 	"mtgconv/pkg/mtgconv2/core"
 )
@@ -88,74 +89,79 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	slog.Debug("starting Moxfield Search")
 	slog.Debug("Got search config", "scfg", scfg)
 
-	// start building http request
-	slog.Debug("building the http request")
-	req, err := http.NewRequest(http.MethodGet, MoxfieldDeckSearchUrl, nil)
-	if err != nil {
-		return []core.DeckMeta{}, err
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", cfg.UserAgent)
-
-	// start appending query params
-	q := req.URL.Query()
-	q.Add("pageNumber", "1")
-	q.Add("pageSize", "100")
-	q.Add("sortType", string(scfg.SortType))
-	q.Add("sortDirection", string(scfg.SortDirection))
-	q.Add("fmt", string(scfg.DeckFormat))
-	q.Add("minBracket", scfg.MinBracket.String())
-	q.Add("maxBracket", scfg.MaxBracket.String())
-	if scfg.Username != "" {
-		q.Add("authorUserNames", scfg.Username)
-		// TODO: for username search also include these ; includePinned=true showIllegal=true board=mainboard
-	}
-	req.URL.RawQuery = q.Encode()
-
-	slog.Debug("got query URL", "url", req.URL.String())
-
-	// wait the required amount of time
-	if err := MoxfieldAPIRateLimiter.Wait(ctx); err != nil {
-		return []core.DeckMeta{}, err
-	}
-
-	// run the http request
-	slog.Debug("running the http request")
-	jsonStr, err := core.DoRequestJSON(req)
-	if err != nil {
-		return []core.DeckMeta{}, err
-	}
-
-	// save JSON to file if that was requested
-	if cfg.SaveJSON {
-		// indent the JSON for readability
-		pretty, err := core.PrettyJSON(jsonStr)
-		if err != nil {
-			return []core.DeckMeta{}, err
-		}
-		if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
-			return []core.DeckMeta{}, err
-		}
-	}
-
-	// convert to Go object
-	slog.Debug("converting to Go object")
-	result, err := MakeMoxfieldSeachResult(jsonStr)
-	if err != nil {
-		slog.Error("error parsing JSON", "err", err)
-		return []core.DeckMeta{}, err
-	}
-
-	slog.Debug("get results", "nresults", len(result.Data))
-
-	// convert each search result to a core.DeckMeta
+	var pageStart int = 1
+	var pageEnd int = 3
 	deckMetaList := []core.DeckMeta{}
-	for _, entry := range result.Data {
-		deckMeta, err := MoxfieldSearchResultToDeckMeta(entry)
+	for page := pageStart; page <= pageEnd; page++ {
+		// start building http request
+		slog.Debug("building the http request")
+		req, err := http.NewRequest(http.MethodGet, MoxfieldDeckSearchUrl, nil)
 		if err != nil {
 			return []core.DeckMeta{}, err
 		}
-		deckMetaList = append(deckMetaList, deckMeta)
+		req.Header.Set("Accept", "application/json")
+		req.Header.Set("User-Agent", cfg.UserAgent)
+
+		// start appending query params
+		q := req.URL.Query()
+		q.Add("pageNumber", strconv.Itoa(page))
+		q.Add("pageSize", "100")
+		q.Add("sortType", string(scfg.SortType))
+		q.Add("sortDirection", string(scfg.SortDirection))
+		q.Add("fmt", string(scfg.DeckFormat))
+		q.Add("minBracket", scfg.MinBracket.String())
+		q.Add("maxBracket", scfg.MaxBracket.String())
+		if scfg.Username != "" {
+			q.Add("authorUserNames", scfg.Username)
+			// TODO: for username search also include these ; includePinned=true showIllegal=true board=mainboard
+		}
+		req.URL.RawQuery = q.Encode()
+
+		slog.Debug("got query URL", "url", req.URL.String())
+
+		// wait the required amount of time
+		if err := MoxfieldAPIRateLimiter.Wait(ctx); err != nil {
+			return []core.DeckMeta{}, err
+		}
+
+		// run the http request
+		slog.Debug("running the http request")
+		jsonStr, err := core.DoRequestJSON(req)
+		if err != nil {
+			return []core.DeckMeta{}, err
+		}
+
+		// save JSON to file if that was requested
+		if cfg.SaveJSON {
+			// indent the JSON for readability
+			pretty, err := core.PrettyJSON(jsonStr)
+			if err != nil {
+				return []core.DeckMeta{}, err
+			}
+			if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
+				return []core.DeckMeta{}, err
+			}
+		}
+
+		// convert to Go object
+		slog.Debug("converting to Go object")
+		result, err := MakeMoxfieldSeachResult(jsonStr)
+		if err != nil {
+			slog.Error("error parsing JSON", "err", err)
+			return []core.DeckMeta{}, err
+		}
+
+		slog.Debug("get results","page", page, "nresults", len(result.Data))
+
+		// convert each search result to a core.DeckMeta
+
+		for _, entry := range result.Data {
+			deckMeta, err := MoxfieldSearchResultToDeckMeta(entry)
+			if err != nil {
+				return []core.DeckMeta{}, err
+			}
+			deckMetaList = append(deckMetaList, deckMeta)
+		}
 	}
 
 	return deckMetaList, nil
