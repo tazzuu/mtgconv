@@ -92,7 +92,8 @@ func SortDirections() []SortDirection {
 type DeckFormat string
 const (
 	DeckFormatCommander = "commander"
+	DeckFormatCommanderPrecons = "commanderPrecons" // NOTE: Moxfield only
 )
 func DeckFormats() []DeckFormat {
-	return []DeckFormat{DeckFormatCommander}
+	return []DeckFormat{DeckFormatCommander, DeckFormatCommanderPrecons}
 }
