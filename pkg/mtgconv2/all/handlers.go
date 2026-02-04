@@ -3,6 +3,7 @@ package all
 import (
 	_ "mtgconv/pkg/mtgconv2/sources/moxfield"
 	_ "mtgconv/pkg/mtgconv2/outputs/dck"
+	_ "mtgconv/pkg/mtgconv2/outputs/txt"
 )
 
 // register all the mtgconv input and output handlers here

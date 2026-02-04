@@ -64,6 +64,8 @@ func ParseOutputFormat(raw string) (OutputFormat, error) {
 	switch strings.ToLower(raw) {
 	case string(OutputDCK):
 		return OutputDCK, nil
+	case string(OutputTXT):
+		return OutputTXT, nil
 	case string(OutputJSON):
 		return OutputJSON, nil
 	default:

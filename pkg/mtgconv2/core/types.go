@@ -23,10 +23,11 @@ type OutputFormat string
 const (
 	OutputDCK  OutputFormat = "dck"
 	OutputJSON OutputFormat = "json"
+	OutputTXT OutputFormat = "txt"
 	// add more formats here
 )
 func OutputFormats() []OutputFormat {
-	return []OutputFormat{OutputDCK, OutputJSON}
+	return []OutputFormat{OutputDCK, OutputJSON, OutputTXT}
 }
 
 // sections in a deck list

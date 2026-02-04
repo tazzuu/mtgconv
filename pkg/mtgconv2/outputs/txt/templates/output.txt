@@ -1,0 +1,3 @@
+{{ range $key, $value := . | CollectCommanders }}{{ $value | FormatTxtLine }}
+{{ end }}{{ range $key, $value := . | CollectMainboard }}{{ $value | FormatTxtLine }}
+{{ end }}
