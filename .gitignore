@@ -1,8 +1,7 @@
 tmp.json
 build
-./mtgconv
+/mtgconv
 *.dck
-mtgconv
 response.json
 .DS_Store
 converted-decks
