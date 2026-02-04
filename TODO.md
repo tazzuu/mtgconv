@@ -1,0 +1,8 @@
+- add Archidekt source
+- get precon decks from Archidekt https://archidekt.com/commander-precons
+- api & web interface
+- converted deck repository
+- investigate more potential data input sources
+  - Deckstats https://deckstats.net/forum/index.php?topic=41323.0
+  - TappedOut https://github.com/DerpaholicRex/TTSDeckImporterTappedOut
+  - MTGGoldfish https://github.com/lheyberger/mtg-parser
