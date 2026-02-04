@@ -23,6 +23,7 @@ Magic the Gathering Deck list converter.
 ## Supported Outputs
 
 - `.dck` decklist format
+  - includes "Compatibility Mode" support to output reduce card information to ensure support for various programs
 - `.txt` plain text format
 - `.json` serialized format
 
