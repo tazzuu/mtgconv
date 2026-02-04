@@ -11,10 +11,11 @@ type BuildInfo struct{ Version, Commit, Date, Program string }
 type APISource string
 const (
 	SourceMoxfield APISource = "moxfield.com"
+	SourceArchidekt APISource = "archidekt.com"
 	// add more sources here
 )
 func APISources() []APISource {
-	return []APISource{SourceMoxfield}
+	return []APISource{SourceMoxfield, SourceArchidekt}
 }
 
 // output data format
