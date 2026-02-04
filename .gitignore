@@ -6,3 +6,4 @@ response.json
 .DS_Store
 converted-decks
 *.json
+*decks
