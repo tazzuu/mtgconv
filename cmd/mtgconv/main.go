@@ -34,9 +34,7 @@ type Convert struct {
 	Input string `arg:"" help:"file or URL path to input deck list"`
 	}
 func (c *Convert) Run(ctx *Context) error {
-	core.ConfigureLogging(ctx.Verbose)
-
-	// check the output format
+	// check the output format // NOTE: dont need to do this anymore
 	format, err := core.ParseOutputFormat(c.OutputFormat)
 	if err != nil {
 		// log.Fatalf("Error: invalid output format: %v", err)
@@ -83,7 +81,6 @@ type Search struct {
 	Username string `default:"" help:"Filter search by the given username"`
 }
 func (s *Search) Run(ctx *Context) error {
-	core.ConfigureLogging(ctx.Verbose)
 	slog.Debug("starting cli search")
 
 	// initialize default search config
@@ -152,6 +149,8 @@ func main() {
 	"SearchAPIDefault": string(core.SourceMoxfield),
 	"SearchAPISources": SearchAPISources(),
   })
+	// initialize logging
+  core.ConfigureLogging(cli.Verbose)
   // Call the Run() method of the selected parsed command.
   err := ctx.Run(&Context{
 	UserAgent: cli.UserAgent,
