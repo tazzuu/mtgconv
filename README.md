@@ -74,3 +74,9 @@ make build
 - `pkg/mtgconv2/core`: core pipeline, configs, and types
 - `pkg/mtgconv2/sources`: input source adapters
 - `pkg/mtgconv2/outputs`: output handlers
+
+# Planned Features
+
+- web interface & hosted app instance
+- static resource repository of retrieved & converted deck lists
+- add more input sources
