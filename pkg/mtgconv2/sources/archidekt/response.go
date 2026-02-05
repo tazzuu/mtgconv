@@ -1,6 +1,23 @@
 package archidekt
 
-import "time"
+import (
+	"time"
+	"encoding/json"
+)
+
+
+// convert the Moxfield API response into an object
+func MakeDeck(jsonStr string) (DeckResponse, error) {
+	var deck DeckResponse
+	err := json.Unmarshal([]byte(jsonStr), &deck)
+
+	if err != nil {
+		return DeckResponse{}, err
+	}
+	deck.RetrievedAt = time.Now()
+	return deck, nil
+}
+
 
 // curl -s -H "Accept: application/json" https://archidekt.com/api/decks/19632970/
 type DeckResponse struct {
@@ -8,6 +25,7 @@ type DeckResponse struct {
 	Name           string          `json:"name"`
 	CreatedAt      time.Time       `json:"createdAt"`
 	UpdatedAt      time.Time       `json:"updatedAt"`
+	RetrievedAt time.Time // date retrieved from API
 	DeckFormat     int             `json:"deckFormat"`
 	EdhBracket     int             `json:"edhBracket"`
 	Game           *string         `json:"game"`
@@ -26,7 +44,7 @@ type DeckResponse struct {
 	ParentFolder   int             `json:"parentFolder"`
 	Bookmarked     bool            `json:"bookmarked"`
 	Categories     []Category      `json:"categories"`
-	DeckTags       []string        `json:"deckTags"`
+	// DeckTags       []string        `json:"deckTags"`
 	PlaygroupDeck  *string         `json:"playgroupDeckUrl"`
 	CardPackage    *string         `json:"cardPackage"`
 	Cards          []DeckCardEntry `json:"cards"`
@@ -141,7 +159,7 @@ type OracleCard struct {
 	Tutor           bool        `json:"tutor"`
 	MassLandDenial  bool        `json:"massLandDenial"`
 	TwoCardComboSingleton bool  `json:"twoCardComboSingelton"`
-	TwoCardComboIDs []int       `json:"twoCardComboIds"`
+	// TwoCardComboIDs []int       `json:"twoCardComboIds"`
 	AtomicCombos    []any       `json:"atomicCombos"`
 	PotentialCombos []any       `json:"potentialCombos"`
 	Lang            string      `json:"lang"`

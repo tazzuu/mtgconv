@@ -23,11 +23,9 @@ func DetectURLSource(urlStr string) (APISource, error) {
 	hostname := u.Hostname()
 	slog.Debug("got domain", "hostname", hostname)
 
-	switch APISource(hostname) {
-	case SourceMoxfield:
-		return SourceMoxfield, nil
-	// add more cases here
-	default:
-		return "", &UnrecognizedDomain{Message: hostname}
+	src, err := ParseAPISource(hostname)
+	if err != nil {
+		return "", err
 	}
+	return src, nil
 }

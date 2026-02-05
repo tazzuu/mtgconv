@@ -17,6 +17,18 @@ const (
 func APISources() []APISource {
 	return []APISource{SourceMoxfield, SourceArchidekt}
 }
+func ParseAPISource(hostname string) (APISource, error) {
+	switch APISource(hostname) {
+	case SourceMoxfield:
+		return SourceMoxfield, nil
+	case SourceArchidekt:
+		return SourceArchidekt, nil
+	// add more cases here
+	default:
+		return "", &UnrecognizedDomain{Message: hostname}
+	}
+}
+
 
 // output data format
 // NOTE: also used as file extension for auto output filename
