@@ -81,3 +81,7 @@ make build
 - web interface & hosted app instance
 - static resource repository of retrieved & converted deck lists
 - add more input sources
+
+# Examples
+
+Some examples of deck lists exported with `mtgconv` can be found [here](https://github.com/tazzuu/mtg-decks)
