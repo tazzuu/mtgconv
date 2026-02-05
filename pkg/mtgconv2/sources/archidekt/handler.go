@@ -9,7 +9,7 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
-// input handler for decks from Moxfield
+// input handler for decks from Archidekt
 
 type Handler struct{}
 
@@ -72,7 +72,7 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr 
 		return core.Deck{}, err
 	}
 
-	// convert the Moxfield response deck type into the standardized core Deck type
+	// convert the Archidekt response deck type into the standardized core Deck type
 	deck, err := DeckToCoreDeck(deckObj, input)
 	if err != nil {
 		return deck, err

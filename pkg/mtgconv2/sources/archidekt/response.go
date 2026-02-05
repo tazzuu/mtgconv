@@ -6,7 +6,7 @@ import (
 )
 
 
-// convert the Moxfield API response into an object
+// convert the Archidekt API response into an object
 func MakeDeck(jsonStr string) (DeckResponse, error) {
 	var deck DeckResponse
 	err := json.Unmarshal([]byte(jsonStr), &deck)
