@@ -38,12 +38,31 @@ func MakeAPIURL(deckID string) string {
 }
 
 // https://github.com/linkian209/pyrchidekt/blob/main/pyrchidekt/formats.py
-func DeckFormatToCoreFormat(i int) (core.DeckFormat, error) { // DeckFormatCommander
+func DeckFormatToCoreFormat(i int) (core.DeckFormat, error) {
 	switch i {
 	case 3:
 		return core.DeckFormatCommander, nil
 	default:
 		return "", &core.UnknownDeckFormat{Format:strconv.Itoa(i)}
+	}
+}
+func CoreFormatToDeckFormat(format core.DeckFormat) (int, error) {
+	switch format {
+	case core.DeckFormatCommander:
+		return 3, nil
+	default:
+		return 0, &core.UnknownDeckFormat{Format:string(format)}
+	}
+}
+
+func CoreSortTypeToArkSortType(sortType core.SortType) (string, error) {
+	switch sortType {
+	case core.SortViews:
+		return "viewCount", nil
+	// TODO: add more types from the search API here
+	default:
+		slog.Error("havent implemented other sort types yet sorry")
+		return "", &core.UnknownSortType{Type:string(sortType)}
 	}
 }
 

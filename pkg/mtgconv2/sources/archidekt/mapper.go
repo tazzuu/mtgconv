@@ -5,6 +5,7 @@ import (
 	"strings"
 	"mtgconv/pkg/mtgconv2/core"
 	"strconv"
+	"net/url"
 )
 
 func DeckToCoreDeck(ark DeckResponse, url string) (core.Deck, error) {
@@ -99,4 +100,28 @@ func DeckEntryToCoreDeckEntry(entry DeckCardEntry, boardType core.BoardType) cor
 				NumFaces: len(entry.Card.OracleCard.Faces),
 			},
 	}
+}
+
+func SearchResultToDeckMeta(ark DeckSearchItem) (core.DeckMeta, error) {
+	deckFormat, err := DeckFormatToCoreFormat(ark.DeckFormat)
+	if err != nil {
+		return core.DeckMeta{}, err
+	}
+	deckUrl, err := url.JoinPath(DeckPublicUrlBase, strconv.Itoa(ark.ID))
+	if err != nil {
+		return core.DeckMeta{}, err
+	}
+	meta := core.DeckMeta{
+			ID: strconv.Itoa(ark.ID),
+			Name: ark.Name,
+			Format: string(deckFormat),
+			URL: deckUrl,
+			Date: ark.RetrievedAt,
+			CreatedAt: ark.CreatedAt.Format("2006-01-02"),
+			UpdatedAt: ark.UpdatedAt.Format("2006-01-02"),
+			Authors: []string{ark.Owner.Username},
+			Bracket: core.CommanderBracket(ark.EdhBracket),
+			ViewCount: ark.ViewCount,
+	}
+	return meta, nil
 }

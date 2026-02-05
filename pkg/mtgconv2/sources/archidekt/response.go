@@ -18,6 +18,21 @@ func MakeDeck(jsonStr string) (DeckResponse, error) {
 	return deck, nil
 }
 
+func MakeSeachResult(jsonStr string) (DeckSearchResponse, error) {
+	var results DeckSearchResponse
+	err := json.Unmarshal([]byte(jsonStr), &results)
+
+	if err != nil {
+		return DeckSearchResponse{}, err
+	}
+	for i, _ := range results.Results {
+		results.Results[i].RetrievedAt = time.Now()
+	}
+
+	return results, nil
+}
+
+
 
 // curl -s -H "Accept: application/json" https://archidekt.com/api/decks/19632970/
 type DeckResponse struct {
@@ -28,7 +43,7 @@ type DeckResponse struct {
 	RetrievedAt time.Time // date retrieved from API
 	DeckFormat     int             `json:"deckFormat"`
 	EdhBracket     int             `json:"edhBracket"`
-	Game           *string         `json:"game"`
+	// Game           *string         `json:"game"`
 	Description    string          `json:"description"`
 	ViewCount      int             `json:"viewCount"`
 	Featured       string          `json:"featured"`
@@ -40,13 +55,13 @@ type DeckResponse struct {
 	UserInput      int             `json:"userInput"`
 	Owner          Owner           `json:"owner"`
 	CommentRoot    int             `json:"commentRoot"`
-	Editors        *string         `json:"editors"`
+	// Editors        *string         `json:"editors"`
 	ParentFolder   int             `json:"parentFolder"`
 	Bookmarked     bool            `json:"bookmarked"`
 	Categories     []Category      `json:"categories"`
 	// DeckTags       []string        `json:"deckTags"`
-	PlaygroupDeck  *string         `json:"playgroupDeckUrl"`
-	CardPackage    *string         `json:"cardPackage"`
+	// PlaygroupDeck  *string         `json:"playgroupDeckUrl"`
+	// CardPackage    *string         `json:"cardPackage"`
 	Cards          []DeckCardEntry `json:"cards"`
 }
 
@@ -54,10 +69,10 @@ type Owner struct {
 	ID           int     `json:"id"`
 	Username     string  `json:"username"`
 	Avatar       string  `json:"avatar"`
-	Frame        *string `json:"frame"`
+	// Frame        *string `json:"frame"`
 	CKAffiliate  string  `json:"ckAffiliate"`
 	TCGAffiliate string  `json:"tcgAffiliate"`
-	ReferrerEnum *string `json:"referrerEnum"`
+	// ReferrerEnum *string `json:"referrerEnum"`
 }
 
 type Category struct {
@@ -96,15 +111,15 @@ type Card struct {
 	TcgProductID    int         `json:"tcgProductId"`
 	CkFoilID        int         `json:"ckFoilId"`
 	CkNormalID      int         `json:"ckNormalId"`
-	CmEd            *string     `json:"cmEd"`
+	// CmEd            *string     `json:"cmEd"`
 	ScgSku          string      `json:"scgSku"`
-	ScgFoilSku      *string     `json:"scgFoilSku"`
+	// ScgFoilSku      *string     `json:"scgFoilSku"`
 	CollectorNumber string      `json:"collectorNumber"`
 	MultiverseID    int         `json:"multiverseid"`
 	MtgoFoilID      int         `json:"mtgoFoilId"`
 	MtgoNormalID    int         `json:"mtgoNormalId"`
 	UID             string      `json:"uid"`
-	DisplayName     *string     `json:"displayName"`
+	// DisplayName     *string     `json:"displayName"`
 	ReleasedAt      string      `json:"releasedAt"`
 	ContentWarning  bool        `json:"contentWarning"`
 	Edition         Edition     `json:"edition"`
@@ -125,7 +140,7 @@ type Edition struct {
 	EditionName string  `json:"editionname"`
 	EditionDate string  `json:"editiondate"`
 	EditionType string  `json:"editiontype"`
-	MtgoCode    *string `json:"mtgoCode"`
+	// MtgoCode    *string `json:"mtgoCode"`
 }
 
 type OracleCard struct {
@@ -150,10 +165,10 @@ type OracleCard struct {
 	Tokens          []any       `json:"tokens"`
 	Toughness       string      `json:"toughness"`
 	Types           []string    `json:"types"`
-	Loyalty         *string     `json:"loyalty"`
-	CanlanderPoints *int        `json:"canlanderPoints"`
+	// Loyalty         *string     `json:"loyalty"`
+	// CanlanderPoints *int        `json:"canlanderPoints"`
 	IsPDHCommander  bool        `json:"isPDHCommander"`
-	DefaultCategory *string     `json:"defaultCategory"`
+	// DefaultCategory *string     `json:"defaultCategory"`
 	GameChanger     bool        `json:"gameChanger"`
 	ExtraTurns      bool        `json:"extraTurns"`
 	Tutor           bool        `json:"tutor"`
@@ -179,7 +194,7 @@ type Legalities struct {
 	Commander        string  `json:"commander"`
 	PauperCommander  string  `json:"paupercommander"`
 	Gladiator        string  `json:"gladiator"`
-	Explorer         *string `json:"explorer"`
+	// Explorer         *string `json:"explorer"`
 	Brawl            string  `json:"brawl"`
 	Penny            string  `json:"penny"`
 	Pioneer          string  `json:"pioneer"`
@@ -230,6 +245,7 @@ type DeckSearchItem struct {
 	ID            int           `json:"id"`
 	Name          string        `json:"name"`
 	Size          int           `json:"size"`
+	RetrievedAt time.Time
 	UpdatedAt     time.Time     `json:"updatedAt"`
 	CreatedAt     time.Time     `json:"createdAt"`
 	DeckFormat    int           `json:"deckFormat"`
@@ -264,7 +280,7 @@ type SearchOwner struct {
 	Avatar      string   `json:"avatar"`
 	Moderator   bool     `json:"moderator"`
 	PledgeLevel *int     `json:"pledgeLevel"`
-	Roles       []string `json:"roles"`
+	// Roles       []string `json:"roles"`
 }
 
 type DeckColors struct {

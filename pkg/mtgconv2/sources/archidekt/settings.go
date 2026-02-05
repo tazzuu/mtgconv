@@ -16,6 +16,7 @@ import (
 // https://github.com/topics/archidekt
 // https://archidekt.com/forum/thread/40353
 
+var DeckPublicUrlBase string = "https://archidekt.com/decks/"
 var DeckFetchUrl string = "https://archidekt.com/api/decks/" // look up a specific deck
 var DeckSearchUrl string = "https://archidekt.com/api/decks/v3/" // search all decks
 var ApiSource core.APISource = core.SourceArchidekt
