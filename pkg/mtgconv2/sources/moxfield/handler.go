@@ -96,6 +96,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 
 	var pageStart int = scfg.PageStart
 	var pageEnd int = scfg.PageEnd
+	var pageSize int = scfg.PageSize
 	deckMetaList := []core.DeckMeta{}
 	for page := pageStart; page <= pageEnd; page++ {
 		// start building http request
@@ -110,7 +111,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 		// start appending query params
 		q := req.URL.Query()
 		q.Add("pageNumber", strconv.Itoa(page))
-		q.Add("pageSize", "100")
+		q.Add("pageSize", strconv.Itoa(pageSize))
 		q.Add("sortType", string(scfg.SortType))
 		q.Add("sortDirection", string(scfg.SortDirection))
 		q.Add("fmt", string(scfg.DeckFormat))

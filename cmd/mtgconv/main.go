@@ -73,6 +73,7 @@ type Search struct {
 	Input string `arg:"" default:"${SearchAPIDefault}" help:"URL domain to search for decks, default;${SearchAPIDefault} options;${SearchAPISources}"`
 	PageStart int `default:"1"`
 	PageEnd int `default:"1"`
+	PageSize int `default:"64" help:"Number of results to request per page. Some search API's might not use this setting."`
 	SortType string `default:"${SearchSortTypeDefault}" enum:"${SearchSortTypes}" help:"Type of sorting to apply to search results, options: ${SearchSortTypes}"`
 	SortDirection string `default:"${SearchSortDirectionDefault}" enum:"${SearchSortDirections}" help:"Search sort direction, options: ${SearchSortDirections}"`
 	DeckFormat string `default:"${SearchDeckFormatDefault}" enum:"${SearchDeckFormats}" help:"Search deck formats, options: ${SearchDeckFormats}"`
@@ -95,6 +96,7 @@ func (s *Search) Run(ctx *Context) error {
 	searchConfig.Username = s.Username
 	searchConfig.PageStart = s.PageStart
 	searchConfig.PageEnd = s.PageEnd
+	searchConfig.PageSize = s.PageSize
 
 	slog.Debug("got search config", "searchConfig", searchConfig)
 

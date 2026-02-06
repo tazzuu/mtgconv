@@ -41,6 +41,7 @@ type SearchConfig struct {
 	Username string
 	PageStart int
 	PageEnd int
+	PageSize int
 }
 
 // returns a Search Config with default settings
@@ -54,6 +55,7 @@ func DefaultSearchConfig() SearchConfig {
 		DeckFormat: DeckFormatCommander,
 		PageStart: 1,
 		PageEnd: 1,
+		PageSize: 64, // NOTE: some Search API's default to less or dont use this
 	}
 	return config
 }
