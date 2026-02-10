@@ -6,6 +6,7 @@ import (
 )
 
 // runs the main data conversion pipeline using the input and output handlers selected
+// TODO: move deckMetaOverride into an attribute on Config
 func Run(ctx context.Context, cfg Config, deckMetaOverride DeckMeta) (string, Deck, error) {
 	slog.Debug("starting processing pipeline")
 	src, err := DetectURLSource(cfg.UrlString)
