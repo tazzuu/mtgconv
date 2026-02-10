@@ -9,7 +9,6 @@ URL={{ .Meta.URL }}
 Date={{ .Meta.UpdatedAt }}
 Created={{ .Meta.CreatedAt }}
 Updated={{ .Meta.UpdatedAt }}
-Retrieved={{ .Meta.Date | ConvertDate }}
 ExportedBy={{ ProgramName }} v{{ ProgramVersion }}
 
 [Commander]
