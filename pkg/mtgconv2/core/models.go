@@ -67,6 +67,7 @@ type Card struct {
 	Name            string `json:"name"`
 	SetCode         string `json:"setCode"`
 	SetType string `json:"setType"`
+	SetName string `json:"setName"`
 	CollectorNumber string `json:"collectorNumber"`
 	Layout          string `json:"layout"`
 	ManaCost        string `json:"manaCost"`
@@ -80,6 +81,11 @@ type Card struct {
 	Language        string `json:"language"`
 	IDs             CardIDs `json:"ids"`
 	NumFaces int `json:"numFaces"`
+	Tags []string `json:"tags"`
+	GroupName string `json:"groupName"`
+	IsToken bool `json:"isToken"`
+	IsProxy bool `json:"isProxy"`
+	DateAdded string `json:"dateAdded"`
 }
 
 type CardIDs struct {

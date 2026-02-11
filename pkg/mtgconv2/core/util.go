@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 	"regexp"
+	// "errors"
 )
 
 func GetDateStr() string {
@@ -217,6 +218,12 @@ func SaveTxtToFile(filename string, input string) error {
 	return err
 }
 
+
+// check if a file with the given name exists
+// func FileExists(filename string) bool {
+// 	_, error := os.Stat(filename)
+// 	return !errors.Is(error, os.ErrNotExist)
+// }
 
 // if the card name has '//' in it, return the parts
 func SplitMultiFaceName(raw string) []string {

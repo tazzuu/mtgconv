@@ -9,6 +9,7 @@ type Config struct {
 	PrintVersion   bool   // print version and quit
 	CompatibilityMode bool // enable compatibility mode for modified output
 	Version        string // the current version of the program TODO: replace this with BuildInfo
+	InputSource InputSource
 	OutputFilename string // output file name
 	OutputDir string // output directory name
 	OutputFormat   OutputFormat
@@ -24,6 +25,7 @@ type Config struct {
 func DefaultConfig(build BuildInfo) Config {
 	return Config{
 		// Version: false,
+		InputSource: InputMoxfieldURL,
 		OutputFilename: "auto",
 		AutoFilename: true,
 		OutputFormat: OutputDCK,

@@ -7,7 +7,7 @@ import (
 )
 
 // determine which API source was provided based on the input URL
-func DetectURLSource(urlStr string) (APISource, error) {
+func DetectURLSource(urlStr string) (APISource, InputSource, error) {
 	slog.Debug("parsing domain for URL", "urlStr", urlStr)
 
 	if !strings.Contains(urlStr, "://") {
@@ -16,16 +16,16 @@ func DetectURLSource(urlStr string) (APISource, error) {
 
 	u, err := url.Parse(urlStr)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	// TODO: add hostname normalization for edge-cases from the parsing of the URL
 	hostname := u.Hostname()
 	slog.Debug("got domain", "hostname", hostname)
 
-	src, err := ParseAPISource(hostname)
+	api, src, err := ParseAPISource(hostname)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return src, nil
+	return api, src, nil
 }

@@ -5,6 +5,14 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+func InputSources() string {
+	format := []string{}
+	for _, v := range core.InputSources() {
+		format = append(format, string(v))
+	}
+	return strings.Join(format, ",")
+}
+
 func OutputFormats() string {
 	out := []string{}
 	for _, v := range core.OutputFormats() {

@@ -29,23 +29,33 @@ type Context struct {
 
 // subcommand for converting a single deck into a different format
 type Convert struct {
-	OutputFilename string `default:"-" help:"Output filename, use '-' to write to stdout, use 'auto' to automatically generate a filename based on decklist metadata"`
+	InputSource string `default:"${DefaultInputSource}" help:"data input format, options: ${InputSources}" enum:"${InputSources}"`
+	OutputFilename string `default:"${DefaultOutputFilename}" help:"Output filename, use '-' to write to stdout, use 'auto' to automatically generate a filename based on decklist metadata"`
 	OutputFormat string `default:"${ConvertOutputFormatDefault}" enum:"${ConvertOutputFormatOptions}" help:"Output deck list format, options: ${ConvertOutputFormatOptions}"`
 	Input string `arg:"" help:"file or URL path to input deck list"`
 	}
 func (c *Convert) Run(ctx *Context) error {
-	// check the output format // NOTE: dont need to do this anymore
+	// check the output format // NOTE: dont need to do this anymore?
 	format, err := core.ParseOutputFormat(c.OutputFormat)
 	if err != nil {
 		// log.Fatalf("Error: invalid output format: %v", err)
-		return &core.UnknownOutputFormat{Format: core.OutputFormat(c.OutputFormat)}
+		return err
+	}
+
+	// check the input format
+	inputSource, err := core.ParseInputSource(c.InputSource)
+	if err != nil {
+		return err
 	}
 
 	// create config object
+	// create default config with global options applied
 	config := ApplyConfig(*ctx)
+	// apply cli options to config
+	config.InputSource = inputSource
+	config.OutputFormat = format
 	config.OutputFilename = c.OutputFilename
 	config.UrlString = c.Input
-	config.OutputFormat = format
 
 	if config.OutputFilename == "auto" {
 		config.AutoFilename = true
@@ -61,7 +71,6 @@ func (c *Convert) Run(ctx *Context) error {
 	// main entrypoint for the program
 	err = core.RunCLI(config, core.DeckMeta{})
 	if err != nil {
-		// log.Fatalf("error running program: %v", err)
 		return err
 	}
 
@@ -84,6 +93,12 @@ type Search struct {
 func (s *Search) Run(ctx *Context) error {
 	slog.Debug("starting cli search")
 
+	// check the input format
+	_, src, err := core.DetectURLSource(s.Input)
+	if err != nil {
+		return err
+	}
+
 	// initialize default search config
 	searchConfig := core.DefaultSearchConfig()
 
@@ -103,9 +118,10 @@ func (s *Search) Run(ctx *Context) error {
 	// create config object
 	config := ApplyConfig(*ctx)
 	config.UrlString = s.Input
+	config.InputSource = src
 
 	slog.Debug("got config", "config", config)
-	err := core.SearchCLI(config, searchConfig)
+	err = core.SearchCLI(config, searchConfig)
 	if err != nil {
 		return err
 	}
@@ -150,6 +166,9 @@ func main() {
 	"SearchDeckFormats": SearchDeckFormats(),
 	"SearchAPIDefault": string(core.SourceMoxfield),
 	"SearchAPISources": SearchAPISources(),
+	"DefaultOutputFilename": "-", // output to stdout by default
+	"DefaultInputSource": string(core.InputMoxfieldURL),
+	"InputSources": InputSources(),
   })
 	// initialize logging
   core.ConfigureLogging(cli.Verbose)

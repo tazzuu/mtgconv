@@ -20,6 +20,8 @@ GIT_TAG:=$(shell git describe --tags)
 BIN:=mtgconv
 
 # compile for the current system
+$(BIN): build
+
 build:
 	CGO_ENABLED=0 go build -ldflags="-X 'main.version=$(GIT_TAG)'" -trimpath -o ./$(BIN) ./$(SRC)
 .PHONY:build
@@ -41,3 +43,9 @@ build-all:
 # brew install goreleaser
 release:
 	goreleaser release --snapshot --clean
+
+SHINY_FILE:=ShinyExport-7ae9f94e61ef4c9785c441ca55df9194.csv
+test-cases: $(BIN)
+	./$(BIN) --verbose --output-dir my-decks-tmp search --page-size 2 --sort-type views archidekt.com
+	./$(BIN) --output-dir my-decks-tmp --verbose --save-json --user-agent "$$MOXKEY" convert --output-filename auto --output-format dck https://moxfield.com/decks/TiS_BYhhnUWp_3aq24hbFA
+	[ -f "$(SHINY_FILE)" ] && ./$(BIN) convert --input-source shiny-csv  "$(SHINY_FILE)" || exit 0

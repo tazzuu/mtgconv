@@ -8,7 +8,7 @@ import "sync"
 var (
 	sourceMu sync.RWMutex
 	outputMu sync.RWMutex
-	sources  = map[APISource]SourceHandler{}
+	sources  = map[InputSource]SourceHandler{}
 	outputs  = map[OutputFormat]OutputHandler{}
 )
 
@@ -18,7 +18,7 @@ func RegisterSource(h SourceHandler) {
 	sources[h.Source()] = h
 }
 
-func HandlerForSource(src APISource) (SourceHandler, error) {
+func HandlerForSource(src InputSource) (SourceHandler, error) {
 	sourceMu.RLock()
 	defer sourceMu.RUnlock()
 	h, ok := sources[src]

@@ -12,6 +12,13 @@ func (e *UnrecognizedDomain) Error() string {
 	return fmt.Sprintf("unrecognized domain: %s", e.Message)
 }
 
+type UnknownInputSource struct {
+	Source InputSource
+}
+func (e *UnknownInputSource) Error() string {
+	return fmt.Sprintf("unknown input format: %s", e.Source)
+}
+
 type UnknownOutputFormat struct {
 	Format OutputFormat
 }

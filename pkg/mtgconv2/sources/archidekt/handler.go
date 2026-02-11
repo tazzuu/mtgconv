@@ -13,8 +13,15 @@ import (
 
 type Handler struct{}
 
-func (h Handler) Source() core.APISource {
-	return core.SourceArchidekt
+func (h Handler) Source() core.InputSource {
+	return core.InputArchidektURL
+}
+
+func (h Handler) Import(filename string, cfg core.Config) (core.Deck, error) {
+	_ = filename
+	_ = cfg
+
+	return core.Deck{}, nil
 }
 
 func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr core.DeckMeta) (core.Deck, error) {
@@ -89,6 +96,8 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 
 	var pageStart int = scfg.PageStart
 	var pageEnd int = scfg.PageEnd
+	// NOTE: Archidekt API does not have pageSize so limit the total number of output items instead
+	var numDecks int = scfg.PageSize
 	deckMetaList := []core.DeckMeta{}
 	for page := pageStart; page <= pageEnd; page++ {
 		// start building http request
@@ -168,6 +177,10 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 
 		// convert each search result to a core.DeckMeta
 		for _, entry := range result.Results {
+			if len(deckMetaList) >= numDecks {
+				slog.Debug("Archidekt 'page size' limit reached, skipping the rest of the results", "numDecks", numDecks)
+				break
+			}
 			deckMeta, err := SearchResultToDeckMeta(entry)
 			if err != nil {
 				return []core.DeckMeta{}, err

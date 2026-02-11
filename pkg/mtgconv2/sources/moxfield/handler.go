@@ -13,8 +13,15 @@ import (
 
 type Handler struct{}
 
-func (h Handler) Source() core.APISource {
-	return core.SourceMoxfield
+func (h Handler) Source() core.InputSource {
+	return core.InputMoxfieldURL
+}
+
+func (h Handler) Import(filename string, cfg core.Config) (core.Deck, error) {
+	_ = filename
+	_ = cfg
+
+	return core.Deck{}, nil
 }
 
 func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr core.DeckMeta) (core.Deck, error) {

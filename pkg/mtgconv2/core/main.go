@@ -85,20 +85,16 @@ func CreateOutput(contents string, outputFilename string, outputDir string, auto
 func SearchCLI(config Config, searchConfig SearchConfig) error {
 	ctx := context.Background()
 	slog.Debug("starting processing pipeline")
-	src, err := DetectURLSource(config.UrlString)
-	if err != nil {
-		return err
-	}
 
-	slog.Debug("configuring source handler")
-	sourceHandler, err := HandlerForSource(src)
+	slog.Debug("configuring source handler", "config.InputSource", config.InputSource)
+	sourceHandler, err := HandlerForSource(config.InputSource)
 	if err != nil {
 		return err
 	}
 
 	slog.Debug("configuring search settings")
 
-	slog.Info("searching for decks", "source", src)
+	slog.Info("searching for decks", "source", config.UrlString)
 	result, err := sourceHandler.Search(ctx, config, searchConfig)
 	if err != nil {
 		return err

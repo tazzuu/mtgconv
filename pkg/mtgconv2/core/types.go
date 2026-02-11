@@ -17,17 +17,64 @@ const (
 func APISources() []APISource {
 	return []APISource{SourceMoxfield, SourceArchidekt}
 }
-func ParseAPISource(hostname string) (APISource, error) {
+func ParseAPISource(hostname string) (APISource, InputSource,  error) {
 	switch APISource(hostname) {
 	case SourceMoxfield:
-		return SourceMoxfield, nil
+		return SourceMoxfield, InputMoxfieldURL, nil
 	case SourceArchidekt:
-		return SourceArchidekt, nil
+		return SourceArchidekt, InputArchidektURL, nil
 	// add more cases here
 	default:
-		return "", &UnrecognizedDomain{Message: hostname}
+		return "", "", &UnrecognizedDomain{Message: hostname}
 	}
 }
+
+type InputSourceType string
+const (
+	InputSourceTypeFile InputSourceType = "file"
+	InputSourceTypeURL InputSourceType = "url"
+)
+
+// all of the supported input data formats
+type InputSource string
+const (
+	InputMoxfieldURL InputSource = "moxfield-url"
+	InputArchidektURL InputSource = "archidekt-url"
+	InputShinyCSV InputSource = "shiny-csv"
+)
+// return the InputSourceType and if its a file type or not
+func (f InputSource) Type() (InputSourceType, bool) {
+	switch f {
+	// url types
+	case InputMoxfieldURL, InputArchidektURL:
+		return InputSourceTypeURL, false
+	// file types
+	case InputShinyCSV:
+		return InputSourceTypeFile, true
+	default:
+		return "", false
+	}
+}
+func InputSources() []InputSource {
+	return []InputSource{
+		InputMoxfieldURL,
+		InputArchidektURL,
+		InputShinyCSV,
+	}
+}
+func ParseInputSource(raw string) (InputSource, error) {
+	switch InputSource(raw) {
+	case InputMoxfieldURL:
+		return InputMoxfieldURL, nil
+	case InputArchidektURL:
+		return InputArchidektURL, nil
+	case InputShinyCSV:
+		return InputShinyCSV, nil
+	default:
+		return "", &UnknownInputSource{Source: InputSource(raw)}
+	}
+}
+
 
 
 // output data format
