@@ -11,16 +11,13 @@ Magic the Gathering Deck list converter.
 - Search for decks on supported  online platforms and batch-convert the results
 - Core package built in Go, designed for re-use as a library, and designed with a modular system for adding new input sources and output formats
 
-## Supported Sources
+## Supported Input Sources
 
 - [moxfield.com/](https://moxfield.com/)
-
-### Coming Soon
-
 - [archidekt.com](https://archidekt.com)
 - [Shiny card tracker .csv export](https://play.google.com/store/apps/details?id=io.getshiny.shiny&hl=en-US&pli=1)
 
-## Supported Outputs
+## Supported Outputs Formats
 
 - `.dck` decklist format
   - includes "Compatibility Mode" support to output reduce card information to ensure support for various programs
@@ -39,6 +36,12 @@ mtgconv search --help
 
 ## Examples
 
+Convert an Archidekt deck to .dck format
+
+```bash
+mtgconv convert --input-source archidekt-url --output-format dck --compatibility-mode https://archidekt.com/decks/7031486/buffs_by_hans
+```
+
 Convert a Moxfield deck to .txt decklist format
 
 ```bash
@@ -49,6 +52,12 @@ Search for the top 100 Commander decks and save them as .dck deck list files
 
 ```bash
 mtgconv --user-agent "$MOXKEY" search moxfield.com
+```
+
+Convert a Shiny .csv collection file into txt format
+
+```bash
+./mtgconv convert --input-source shiny-csv --output-format txt  ShinyExport-1234567890.csv
 ```
 
 - **NOTE**: querying Moxfield requires an API key
