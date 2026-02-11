@@ -29,7 +29,7 @@ func RunCLI(config Config, deckMetaOverride DeckMeta) (err error) {
 		config.AutoFilename,
 		deck.Meta.Name,
 		deck.Meta.Version,
-		string(config.OutputFormat),
+		config.OutputFormat.GetExtension(),
 	)
 
 	return err

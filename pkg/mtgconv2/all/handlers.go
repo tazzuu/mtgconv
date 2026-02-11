@@ -7,6 +7,7 @@ import (
 	_ "mtgconv/pkg/mtgconv2/outputs/dck"
 	_ "mtgconv/pkg/mtgconv2/outputs/txt"
 	_ "mtgconv/pkg/mtgconv2/outputs/json"
+	_ "mtgconv/pkg/mtgconv2/outputs/moxfield-collection"
 )
 
 // register all the mtgconv input and output handlers here

@@ -2,6 +2,7 @@ package core
 
 import (
 	"strconv"
+	"strings"
 )
 
 // object type to use for passing the program build info to internal components
@@ -78,16 +79,48 @@ func ParseInputSource(raw string) (InputSource, error) {
 
 
 // output data format
-// NOTE: also used as file extension for auto output filename
 type OutputFormat string
 const (
 	OutputDCK  OutputFormat = "dck"
 	OutputJSON OutputFormat = "json"
 	OutputTXT OutputFormat = "txt"
+	OutputMoxfieldCollection OutputFormat = "moxfield-collection"
 	// add more formats here
 )
+// return the file extension to use
+func (f OutputFormat) GetExtension() string {
+	label := strings.ToLower(string(f))
+	switch label {
+	case string(OutputDCK):
+		return ".dck"
+	case string(OutputTXT):
+		return ".txt"
+	case string(OutputJSON):
+		return ".json"
+	case string(OutputMoxfieldCollection):
+		return ".moxfield-collection.csv"
+	default:
+		return "." + string(f)
+	}
+}
+// determine the correct output format based on the supplied string
+func ParseOutputFormat(raw string) (OutputFormat, error) {
+	switch strings.ToLower(raw) {
+	case string(OutputDCK):
+		return OutputDCK, nil
+	case string(OutputTXT):
+		return OutputTXT, nil
+	case string(OutputJSON):
+		return OutputJSON, nil
+	case string(OutputMoxfieldCollection):
+		return OutputMoxfieldCollection, nil
+	default:
+		return "", &UnknownOutputFormat{OutputFormat(raw)}
+	}
+}
+// return all registered output formats
 func OutputFormats() []OutputFormat {
-	return []OutputFormat{OutputDCK, OutputJSON, OutputTXT}
+	return []OutputFormat{OutputDCK, OutputJSON, OutputTXT,OutputMoxfieldCollection}
 }
 
 // sections in a deck list
@@ -98,6 +131,9 @@ const (
 	BoardSideboard BoardType = "sideboard"
 	BoardMaybeboard BoardType = "maybeboard" // "Considering" cards
 )
+func BoardTypes() []BoardType {
+	return []BoardType{BoardMain, BoardCommander, BoardSideboard, BoardMaybeboard}
+}
 
 // card finishes
 type FinishType string

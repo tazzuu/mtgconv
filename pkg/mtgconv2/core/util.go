@@ -61,19 +61,6 @@ func CollectSideboard(d Deck) []DeckEntry {
 	return []DeckEntry{}
 }
 
-func ParseOutputFormat(raw string) (OutputFormat, error) {
-	switch strings.ToLower(raw) {
-	case string(OutputDCK):
-		return OutputDCK, nil
-	case string(OutputTXT):
-		return OutputTXT, nil
-	case string(OutputJSON):
-		return OutputJSON, nil
-	default:
-		return "", &UnknownOutputFormat{OutputFormat(raw)}
-	}
-
-}
 
 // returns the correct BoardType enum from the available options
 func ParseBoardType(raw string) (BoardType, error) {
