@@ -8,3 +8,4 @@ converted-decks
 *.json
 *decks
 ShinyExport*
+tmp*
