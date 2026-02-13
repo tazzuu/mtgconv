@@ -1,5 +1,6 @@
 package moxfieldcollection
 
+// output row format
 type MoxfieldCollectionRow struct {
 	Count          int     `csv:"Count"`
 	TradelistCount int     `csv:"Tradelist Count"`

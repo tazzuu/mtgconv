@@ -54,7 +54,7 @@ func (h Handler) Import(filename string, cfg core.Config) (core.Deck, error) {
 	slog.Debug("got rows", "n", len(rows))
 	slog.Debug("first row", "row", rows[0])
 
-	deck := ShinyRowsToCoreDeck(rows)
+	deck := ShinyRowsToCoreDeck(rows, cfg)
 
 	return deck, nil
 }

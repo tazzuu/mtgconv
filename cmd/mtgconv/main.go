@@ -64,7 +64,8 @@ func (c *Convert) Run(ctx *Context) error {
 	// if we are doing debug run that instead and quit
 	if ctx.Debug {
 		slog.Debug("Starting DebugFunc from cmd/main.go")
-		core.DebugFunc(config)
+		// core.DebugFunc(config)
+		debug(config)
 		return nil
 	}
 

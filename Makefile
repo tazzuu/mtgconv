@@ -9,11 +9,6 @@ tidy:
 # cli interface for the program
 SRC:=cmd/mtgconv
 
-
-test:
-	go test ./...
-
-
 # need at least 1 tag for this to work
 GIT_TAG:=$(shell git describe --tags)
 # name of output binary file
@@ -44,6 +39,16 @@ build-all:
 release:
 	goreleaser release --snapshot --clean
 
+
+# test:
+# 	go test ./...
+
+# run a select set of unit tests
+test:
+	go test ./pkg/mtgconv2/sources/shinycsv
+
+
+# run all end to end test cases
 SHINY_FILE:=ShinyExport-7ae9f94e61ef4c9785c441ca55df9194.csv
 test-cases: $(BIN)
 	./$(BIN) --verbose --output-dir my-decks-tmp search --page-size 2 --sort-type views archidekt.com
