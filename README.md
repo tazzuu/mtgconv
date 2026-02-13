@@ -60,6 +60,12 @@ Convert a Shiny .csv collection file into txt format
 ./mtgconv convert --input-source shiny-csv --output-format txt  ShinyExport-1234567890.csv
 ```
 
+Convert a Shiny .csv collection into a Moxfield Collection .csv
+
+```bash
+mtgconv convert --output-format moxfield-collection --input-source shiny-csv --compatibility-mode ShinyExport-1234567890.csv
+```
+
 - **NOTE**: querying Moxfield requires an API key
 
 # Installation
