@@ -42,6 +42,7 @@ const (
 	InputMoxfieldURL InputSource = "moxfield-url"
 	InputArchidektURL InputSource = "archidekt-url"
 	InputShinyCSV InputSource = "shiny-csv"
+	InputTxtMoxfield InputSource = "txt-moxfield"
 )
 // return the InputSourceType and if its a file type or not
 func (f InputSource) Type() (InputSourceType, bool) {
@@ -50,7 +51,7 @@ func (f InputSource) Type() (InputSourceType, bool) {
 	case InputMoxfieldURL, InputArchidektURL:
 		return InputSourceTypeURL, false
 	// file types
-	case InputShinyCSV:
+	case InputShinyCSV, InputTxtMoxfield:
 		return InputSourceTypeFile, true
 	default:
 		return "", false
@@ -61,6 +62,7 @@ func InputSources() []InputSource {
 		InputMoxfieldURL,
 		InputArchidektURL,
 		InputShinyCSV,
+		InputTxtMoxfield,
 	}
 }
 func ParseInputSource(raw string) (InputSource, error) {
@@ -71,6 +73,8 @@ func ParseInputSource(raw string) (InputSource, error) {
 		return InputArchidektURL, nil
 	case InputShinyCSV:
 		return InputShinyCSV, nil
+	case InputTxtMoxfield:
+		return InputTxtMoxfield, nil
 	default:
 		return "", &UnknownInputSource{Source: InputSource(raw)}
 	}

@@ -21,14 +21,19 @@ func FormatDckLine(entry core.DeckEntry, compatibilityMode bool) string {
 		// if the card has multiple faces and has // in the name, return only the first face e.g. first part of the name
 		if strings.Contains(cardName, "//") {
 			slog.Debug("enforcing compat name for card with // in the name", "name", cardName)
-			parts := core.SplitMultiFaceName(cardName)
+			parts := core.SplitMultiFaceName(cardName, "//")
+			cardName = parts[0]
+			slog.Debug("new name;", "name", cardName)
+		} else if strings.Contains(cardName, "/") {
+			slog.Debug("enforcing compat name for card with // in the name", "name", cardName)
+			parts := core.SplitMultiFaceName(cardName, "/")
 			cardName = parts[0]
 			slog.Debug("new name;", "name", cardName)
 		}
 
 		if numFaces > 1 {
 			slog.Debug("enforcing compat name for card with multiple faces", "name", cardName)
-			parts := core.SplitMultiFaceName(cardName)
+			parts := core.SplitMultiFaceName(cardName, "//")
 			cardName = parts[0]
 			slog.Debug("new name;", "name", cardName)
 		}

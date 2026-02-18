@@ -9,6 +9,15 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+// simple quick check that we have a token
+func ValidateToken(config core.Config) (bool, error) {
+	var isValid bool = false
+	if config.UserAgent == "" {
+		return isValid, &core.InvalidToken{}
+	}
+	return isValid, nil
+}
+
 // build the API query URL from the deck ID
 func MakeMoxfieldAPIUrl(deckID string) string {
 	u, _ := url.Parse(MoxfieldBaseUrl)

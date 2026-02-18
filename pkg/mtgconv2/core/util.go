@@ -213,8 +213,8 @@ func SaveTxtToFile(filename string, input string) error {
 // }
 
 // if the card name has '//' in it, return the parts
-func SplitMultiFaceName(raw string) []string {
-	parts := strings.Split(raw, "//")
+func SplitMultiFaceName(raw string, sep string) []string {
+	parts := strings.Split(raw, sep)
 	for i := range parts {
 		parts[i] = strings.TrimSpace(parts[i])
 	}

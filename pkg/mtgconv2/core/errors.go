@@ -133,3 +133,23 @@ type TemplateExecutionError struct {
 func (e *TemplateExecutionError) Error() string {
 	return fmt.Sprintf("error executing template: %v", e.Message)
 }
+
+type LineParseError struct {
+	Message string
+}
+func (e *LineParseError) Error() string {
+	return fmt.Sprintf("error parsing line: %s", e.Message)
+}
+
+type QuantityParseError struct {
+	Quantity string
+}
+func (e *QuantityParseError) Error() string {
+	return fmt.Sprintf("error parsing quantity: %s", e.Quantity)
+}
+
+
+type InvalidToken struct {}
+func (e *InvalidToken) Error() string {
+	return "Invalid API token supplied for user agent"
+}

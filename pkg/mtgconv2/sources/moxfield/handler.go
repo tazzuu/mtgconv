@@ -29,6 +29,11 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr 
 	_ = input
 	_ = cfg
 
+	_, err := ValidateToken(cfg)
+	if err != nil {
+		return core.Deck{}, err
+	}
+
 	// get the deck ID from the provided URL
 	deckID, err := DeckIDFromURL(input)
 	if err != nil {
@@ -100,6 +105,11 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 	_ = cfg
 	slog.Debug("starting Moxfield Search")
 	slog.Debug("Got search config", "scfg", scfg)
+
+	_, err := ValidateToken(cfg)
+	if err != nil {
+		return []core.DeckMeta{}, err
+	}
 
 	var pageStart int = scfg.PageStart
 	var pageEnd int = scfg.PageEnd
