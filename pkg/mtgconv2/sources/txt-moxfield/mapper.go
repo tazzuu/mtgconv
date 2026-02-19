@@ -25,7 +25,7 @@ func ParseTxtLine(line string) (TxtRow, error) {
 
 	quantity, err := strconv.Atoi(match[1])
 	if err != nil {
-		return TxtRow{}, &core.QuantityParseError{Quantity: fmt.Sprintf("invalid quantity %q: %w", match[1], err)}
+		return TxtRow{}, &core.QuantityParseError{Quantity: fmt.Sprintf("invalid quantity %q: %v", match[1], err)}
 	}
 
 
