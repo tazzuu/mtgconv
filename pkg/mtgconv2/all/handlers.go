@@ -5,6 +5,7 @@ import (
 	_ "mtgconv/pkg/mtgconv2/sources/archidekt"
 	_ "mtgconv/pkg/mtgconv2/sources/shinycsv"
 	_ "mtgconv/pkg/mtgconv2/sources/txt-moxfield"
+	_ "mtgconv/pkg/mtgconv2/sources/txt"
 
 	_ "mtgconv/pkg/mtgconv2/outputs/dck"
 	_ "mtgconv/pkg/mtgconv2/outputs/txt"
