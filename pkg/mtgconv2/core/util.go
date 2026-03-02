@@ -24,6 +24,10 @@ func CollectAuthors(m DeckMeta) string {
 	return strings.Join(m.Authors, ",")
 }
 
+func CollectTags(m DeckMeta) string {
+	return strings.Join(m.Tags, ",")
+}
+
 func SortDeckEntries(entries []DeckEntry) []DeckEntry {
 	out := make([]DeckEntry, len(entries))
 	copy(out, entries)
@@ -123,25 +127,6 @@ func ParseDeckFormat(raw string) (DeckFormat, error) {
 		return DeckFormatCommander, nil
 	default:
 		return "", &UnknownDeckFormat{raw}
-	}
-}
-
-func ParseBracket(raw int) (CommanderBracket, error) {
-	switch raw {
-	case 0: // unset Bracket defaults to Bracket 1
-		return CommanderBracket1, nil
-	case int(CommanderBracket1):
-		return CommanderBracket1, nil
-	case int(CommanderBracket2):
-		return CommanderBracket2, nil
-	case int(CommanderBracket3):
-		return CommanderBracket3, nil
-	case int(CommanderBracket4):
-		return CommanderBracket4, nil
-	case int(CommanderBracket5):
-		return CommanderBracket5, nil
-	default:
-		return 0, &UnknownBracket{raw}
 	}
 }
 

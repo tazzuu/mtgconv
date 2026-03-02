@@ -46,6 +46,7 @@ type DeckMeta struct {
 	CreatedAt string `json:"createdAt"`// time in UTC
 	UpdatedAt string `json:"updatedAt"`// time in UTC
 	Authors     []string `json:"authors"`
+	Tags []string `json:"tags"`
 	Bracket CommanderBracket `json:"bracket"`
 	LikeCount int `json:"likeCount"`
 	ViewCount int `json:"viewCount"`
@@ -54,6 +55,10 @@ type DeckMeta struct {
 	Version int `json:"version"`
 	Source      APISource `json:"source"`
 }
+func (m *DeckMeta) IsCEDH() bool {
+	return m.Bracket == CommanderBracket5
+}
+
 
 // an entry for one or more copies of a specific card in the Mainboard, Sideboard, etc.
 type DeckEntry struct {

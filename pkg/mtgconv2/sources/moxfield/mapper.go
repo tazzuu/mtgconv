@@ -44,6 +44,12 @@ func MoxfieldDeckToCoreDeck(mx MoxfieldDeck) (core.Deck, error) {
 		authors = append(authors, author.UserName)
 	}
 
+	// collect the tags e.g. Hubs
+	tags := []string{}
+	for _, hub := range mx.Hubs {
+		tags = append(tags, hub.Name)
+	}
+
 	// initialize core Deck object
 	deck := core.Deck{
 		Meta: core.DeckMeta{
@@ -54,6 +60,7 @@ func MoxfieldDeckToCoreDeck(mx MoxfieldDeck) (core.Deck, error) {
 			Visibility: mx.Visibility,
 			URL: mx.PublicURL,
 			Authors: authors,
+			Tags: tags,
 			Source: ApiSource,
 			Date: mx.RetrievedAt,
 			CreatedAt: mx.CreatedAtUTC,

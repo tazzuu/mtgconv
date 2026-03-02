@@ -35,6 +35,7 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 		"CollectAuthors": core.CollectAuthors,
 		"CollectCommanders": core.CollectCommanders,
 		"CollectMainboard": core.CollectMainboard,
+		"CollectTags": core.CollectTags,
 		"CollectSideboard": func(d core.Deck) []core.DeckEntry {
 			entries := core.CollectSideboard(d)
 			if compatibilityMode && len(entries) > 10 {
@@ -57,6 +58,9 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 		},
 		"ProgramVersion": func() string {
 			return cfg.Build.Version
+		},
+		"FormatNameLine": func(name string) string {
+			return FormatNameLine(name, deck.Meta)
 		},
 	}
 

@@ -181,7 +181,24 @@ func CommanderBrackets() []CommanderBracket {
 		CommanderBracket1, CommanderBracket2, CommanderBracket3, CommanderBracket4, CommanderBracket5,
 	}
 }
-
+func ParseBracket(raw int) (CommanderBracket, error) {
+	switch raw {
+	case 0: // unset Bracket defaults to Bracket 1
+		return CommanderBracket1, nil
+	case int(CommanderBracket1):
+		return CommanderBracket1, nil
+	case int(CommanderBracket2):
+		return CommanderBracket2, nil
+	case int(CommanderBracket3):
+		return CommanderBracket3, nil
+	case int(CommanderBracket4):
+		return CommanderBracket4, nil
+	case int(CommanderBracket5):
+		return CommanderBracket5, nil
+	default:
+		return 0, &UnknownBracket{raw}
+	}
+}
 
 type SortDirection string
 const (

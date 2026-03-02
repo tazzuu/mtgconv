@@ -1,9 +1,10 @@
 [metadata]
-Name={{ .Meta.Name }}
+Name={{ .Meta.Name | FormatNameLine }}
 Description={{ .Meta.Description }}
 Format={{ .Meta.Format }}
 Bracket={{ .Meta.Bracket | ParseBracket | ParseInt }}
 Author={{ .Meta | CollectAuthors }}
+Tags={{ .Meta | CollectTags }}
 Version={{ .Meta.Version }}
 URL={{ .Meta.URL }}
 Date={{ .Meta.UpdatedAt }}

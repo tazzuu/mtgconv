@@ -7,6 +7,17 @@ import (
 	"mtgconv/pkg/mtgconv2/core"
 )
 
+// apply some extra formatting to the Name line
+func FormatNameLine(name string, meta core.DeckMeta) string {
+	// if its a cEDH deck, add that to the Name line
+	if meta.IsCEDH() {
+		if ! strings.Contains(strings.ToLower(name), "cedh") {
+			return name + " [cEDH]"
+		}
+	}
+	return name
+}
+
 // apply conditional formatting for the card line in the .dck file
 // enforce some compatibility requirements here
 func FormatDckLine(entry core.DeckEntry, compatibilityMode bool) string {
