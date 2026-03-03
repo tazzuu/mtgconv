@@ -51,7 +51,11 @@ mtgconv --user-agent "$MOXKEY" convert --output-format txt https://moxfield.com/
 Search for the top 100 Commander decks and save them as .dck deck list files
 
 ```bash
+# Moxfield search
 mtgconv --user-agent "$MOXKEY" search moxfield.com
+
+# Archidekt search
+./mtgconv --output-dir archidekt-decks --compatibility-mode search --sort-type views --page-end 5 archidekt.com
 ```
 
 Convert a Shiny .csv collection file into txt format

@@ -29,6 +29,7 @@ func RunCLI(config Config, deckMetaOverride DeckMeta) (err error) {
 		config.AutoFilename,
 		deck.Meta.Name,
 		deck.Meta.Version,
+		deck.Meta.Bracket,
 		config.OutputFormat.GetExtension(),
 	)
 
@@ -36,7 +37,7 @@ func RunCLI(config Config, deckMetaOverride DeckMeta) (err error) {
 }
 
 // decide where to print the output
-func CreateOutput(contents string, outputFilename string, outputDir string, autoFilename bool, deckName string, deckVersion int, fileExtension string) error {
+func CreateOutput(contents string, outputFilename string, outputDir string, autoFilename bool, deckName string, deckVersion int, deckBracket CommanderBracket, fileExtension string) error {
 	var out *os.File
 	var err error
 	// print to stdout if - or empty string passed
@@ -55,7 +56,7 @@ func CreateOutput(contents string, outputFilename string, outputDir string, auto
 		// auto generate a filename
 		var cleanedOutputFilename string = outputFilename
 		if autoFilename == true {
-			cleanedOutputFilename = GenerateSafeFilename(deckName, deckVersion, fileExtension)
+			cleanedOutputFilename = GenerateSafeFilename(deckName, deckVersion, deckBracket, fileExtension)
 		}
 		// add the output dir name
 		if outputDir != "" {

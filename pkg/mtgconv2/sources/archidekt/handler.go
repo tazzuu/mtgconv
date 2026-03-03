@@ -96,8 +96,8 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 
 	var pageStart int = scfg.PageStart
 	var pageEnd int = scfg.PageEnd
-	// NOTE: Archidekt API does not have pageSize so limit the total number of output items instead
-	var numDecks int = scfg.PageSize
+	// NOTE: Archidekt API does not have pageSize
+
 	deckMetaList := []core.DeckMeta{}
 	for page := pageStart; page <= pageEnd; page++ {
 		// start building http request
@@ -177,10 +177,15 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 
 		// convert each search result to a core.DeckMeta
 		for _, entry := range result.Results {
-			if len(deckMetaList) >= numDecks {
-				slog.Debug("Archidekt 'page size' limit reached, skipping the rest of the results", "numDecks", numDecks)
-				break
-			}
+
+			// NOTE: removed this because its not working correctly to limit the number of results returned per page
+			// instead its skipping everything after the first page
+			//
+			// if len(deckMetaList) >= numDecksPerPage {
+			// 	slog.Debug("Archidekt 'page size' limit reached, skipping the rest of the results", "numDecksPerPage", numDecksPerPage)
+			// 	break
+			// }
+
 			deckMeta, err := SearchResultToDeckMeta(entry)
 			if err != nil {
 				return []core.DeckMeta{}, err

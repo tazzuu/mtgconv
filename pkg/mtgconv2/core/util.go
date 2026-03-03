@@ -157,13 +157,22 @@ func SanitizeFilename(name string) string {
 }
 
 // return a safe formatted filename with embedded metadata and file extension
-func GenerateSafeFilename(name string, version int, extension string) string {
+func GenerateSafeFilename(name string, version int, bracket CommanderBracket, extension string) string {
 	// NOTE: removed date // deck.Meta.Date.Format("20060102"), so that we can re-export more easily
+
 	var output string = fmt.Sprintf(
-		"%s_v%d.%s",
+		"%s.b%d.v%d",
 		SanitizeFilename(name),
+		bracket,
 		version,
-		extension)
+	)
+
+	// check if the extension has a . prefix so we dont add double ..txt
+	if strings.HasPrefix(extension, ".") {
+		output = output + extension
+	} else {
+		output = output + "." + extension
+	}
 	return output
 }
 
