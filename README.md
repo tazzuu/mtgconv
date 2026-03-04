@@ -48,11 +48,20 @@ Convert a Moxfield deck to .txt decklist format
 mtgconv --user-agent "$MOXKEY" convert --output-format txt https://moxfield.com/decks/AZKbE6E6kUWW2zMfHR41sQ
 ```
 
+Convert an Archidekt deck to .dck decklist format
+
+```bash
+mtgconv --output-dir archidekt-decks --compatibility-mode convert --output-filename auto --output-format dck --input-source archidekt-url https://archidekt.com/decks/13186988
+```
+
 Search for the top 100 Commander decks and save them as .dck deck list files
 
 ```bash
 # Moxfield search
 mtgconv --user-agent "$MOXKEY" search moxfield.com
+
+# Moxfield Commander PreCon deck search
+mtgconv --user-agent "$MOXKEY" search --output-dir precon-decks --compatibility-mode --page-end 10 --deck-format commanderPrecons moxfield.com
 
 # Archidekt search
 ./mtgconv --output-dir archidekt-decks --compatibility-mode search --sort-type views --page-end 5 archidekt.com

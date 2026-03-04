@@ -36,6 +36,7 @@ func DeckToCoreDeck(ark DeckResponse, url string) (core.Deck, error) {
 			Name: ark.Name,
 			Description: ark.Description,
 			Format: string(deckFormat),
+			Bracket: core.CommanderBracket(ark.EdhBracket),
 			URL: url,
 			Authors: []string{ark.Owner.Username},
 			Source: ApiSource,

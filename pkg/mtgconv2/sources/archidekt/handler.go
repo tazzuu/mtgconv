@@ -130,8 +130,9 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 		}
 		q.Add("deckFormat", strconv.Itoa(formatInt))
 
-		q.Add("edhBracket", scfg.MinBracket.String())
-		// q.Add("maxBracket", scfg.MaxBracket.String()) // NOTE: there is only one param for bracket in this Search
+		// NOTE: there is only one param for bracket in this Search API
+		// disable the inclusion of bracket since min / max bracket does not work, only exact match
+		// q.Add("edhBracket", scfg.MinBracket.String())
 
 		if scfg.Username != "" {
 			q.Add("ownerUsername", scfg.Username)
