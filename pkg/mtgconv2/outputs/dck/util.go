@@ -42,6 +42,15 @@ func FormatDckLine(entry core.DeckEntry, compatibilityMode bool) string {
 			slog.Debug("new name;", "name", cardName)
 		}
 
+		// replace the Name Sticker Goblin
+		if strings.Contains(cardName, "________ Goblin") {
+			slog.Debug("replacing name sticker goblin card name", "name", cardName)
+			cardName = `"Name Sticker" Goblin`
+			setCode = "UNF"
+			collectorNumber = ""
+			slog.Debug("new name;", "name", cardName)
+		}
+
 		if numFaces > 1 {
 			slog.Debug("enforcing compat name for card with multiple faces", "name", cardName)
 			parts := core.SplitMultiFaceName(cardName, "//")
