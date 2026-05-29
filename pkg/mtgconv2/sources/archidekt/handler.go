@@ -67,7 +67,7 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr 
 		if err != nil {
 			return core.Deck{}, err
 		}
-		if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
+		if err := core.SaveTxtToFile(core.ResponseJSONFilenameBase + ".archidekt.fetch.json", pretty); err != nil {
 			return core.Deck{}, err
 		}
 	}
@@ -161,7 +161,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 			if err != nil {
 				return []core.DeckMeta{}, err
 			}
-			if err := core.SaveTxtToFile(core.ResponseJSONFilename, pretty); err != nil {
+			if err := core.SaveTxtToFile(core.ResponseJSONFilenameBase + ".archidekt.search.json", pretty); err != nil {
 				return []core.DeckMeta{}, err
 			}
 		}

@@ -1,4 +1,5 @@
 package core
 
-const ResponseJSONFilename string = "response.json"
-const RequestTimeOut int = 30
+// const ResponseJSONFilename string = "response.json"
+const ResponseJSONFilenameBase string = "response"
+const RequestTimeOut int = 45
