@@ -11,7 +11,7 @@ import (
 // and return a JSON response
 func DoRequestJSON(req *http.Request)(string, error){
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: time.Duration(RequestTimeOut) * time.Second,
 	}
 
 	resp, err := client.Do(req)
