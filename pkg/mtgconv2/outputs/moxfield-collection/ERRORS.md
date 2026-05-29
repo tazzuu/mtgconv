@@ -27,3 +27,9 @@ Could not find card named "1999 Jakub Slemr". on line 8425
 Could not find card named "1998 Brian Selden". on line 8578
 Could not find card named "Thick Stock". on line 8719
 ```
+
+```
+Could not find card named "African Swallow". on line 93
+Could not find card named "Dragonlord Silumgar" in edition "ppro". on line 2292
+Could not find card named "_____ Goblin" in edition "unf". on line 9609
+```

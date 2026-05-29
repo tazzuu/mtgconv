@@ -4,6 +4,7 @@ import (
 	"github.com/gocarina/gocsv"
 	"mtgconv/pkg/mtgconv2/core"
 	"bytes"
+	"log/slog"
 )
 
 type Handler struct{}
@@ -19,6 +20,7 @@ func (h Handler) Render(deck core.Deck, cfg core.Config) (string, error) {
 	for _, boardType := range core.BoardTypes() {
 		entries = append(entries, deck.Sections[boardType]...)
 	}
+	slog.Debug("moxfield-collection output handler got n entries", "n", len(entries))
 
 	// convert them to output format objects
 	collectionEntries := []MoxfieldCollectionRow{}
