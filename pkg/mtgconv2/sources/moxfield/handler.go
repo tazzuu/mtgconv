@@ -161,7 +161,7 @@ func (h Handler) Search(ctx context.Context, cfg core.Config, scfg core.SearchCo
 			if err != nil {
 				return []core.DeckMeta{}, err
 			}
-			if err := core.SaveTxtToFile(core.ResponseJSONFilenameBase + ".moxfield.search.json", pretty); err != nil {
+			if err := core.SaveTxtToFile(core.ResponseJSONFilenameBase + ".moxfield.search." + strconv.Itoa(page) + ".json", pretty); err != nil {
 				return []core.DeckMeta{}, err
 			}
 		}
