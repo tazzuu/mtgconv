@@ -21,6 +21,10 @@ build:
 	CGO_ENABLED=0 go build -ldflags="-X 'main.version=$(GIT_TAG)'" -trimpath -o ./$(BIN) ./$(SRC)
 .PHONY:build
 
+RUNNER_BIN_DIR:=mtgconv-runner/bin
+build-runner:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'main.version=$(GIT_TAG)'" -trimpath -o "$(RUNNER_BIN_DIR)/mtgconv" ./$(SRC)
+
 # cross-compile for all available OS and arch types
 # use this for releases
 build-all:
