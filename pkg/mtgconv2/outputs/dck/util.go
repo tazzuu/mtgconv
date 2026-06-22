@@ -9,13 +9,19 @@ import (
 
 // apply some extra formatting to the Name line
 func FormatNameLine(name string, meta core.DeckMeta) string {
+	newName := name
 	// if its a cEDH deck, add that to the Name line
 	if meta.IsCEDH() {
 		if ! strings.Contains(strings.ToLower(name), "cedh") {
-			return name + " [cEDH]"
+			newName = newName + " [cEDH]"
 		}
 	}
-	return name
+	// TODO: add the bracket value to the name field for easier searching in Forge
+	// NOTE: this is complicated by the Bracket field only being returned by certain API methods such as Moxfield Search
+	if meta.Bracket > 0 {
+		newName += fmt.Sprintf(" [b%s]", meta.Bracket)
+	}
+	return newName
 }
 
 // apply conditional formatting for the card line in the .dck file
