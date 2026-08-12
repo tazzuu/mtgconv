@@ -31,6 +31,28 @@ func MakeMoxfieldSeachResult(jsonStr string) (MoxfieldSearchResponse, error) {
 	return results, nil
 }
 
+// convert the primer data from the payload into the internal Primer representation
+func MakeMoxfieldPrimer(jsonStr string) (MoxfieldPrimer, error) {
+	var primer MoxfieldPrimer
+	if err := json.Unmarshal([]byte(jsonStr), &primer); err != nil {
+		return MoxfieldPrimer{}, err
+	}
+	primer.RetrievedAt = time.Now()
+	return primer, nil
+}
+
+
+// detect if a Primer is present in the payload
+const MoxfieldPrimerHubName = "Primer"
+func HasPrimer(mx MoxfieldDeck) bool {
+	for _, hub := range mx.Hubs {
+		if hub.Name == MoxfieldPrimerHubName {
+			return true
+		}
+	}
+	return false
+}
+
 // object type representing the fields present in the Moxfield API response
 // NOTE: there are a lot more fields I have not included here
 // NOTE: Bracket is only returned in Search result not Fetch result
@@ -86,6 +108,11 @@ type MoxfieldDeck struct {
 	Sideboard      map[string]MoxfieldDeckEntry `json:"sideboard"`
 
 	Version int `json:"version"`
+}
+
+type MoxfieldPrimer struct {
+	Content     string `json:"content"`
+	RetrievedAt time.Time
 }
 
 type MoxfieldUser struct {

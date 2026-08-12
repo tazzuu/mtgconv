@@ -25,6 +25,7 @@ type Context struct {
 	SaveJSON bool
 	OutputDir string
 	CompatibilityMode bool
+	Primer string
 }
 
 // subcommand for converting a single deck into a different format
@@ -145,6 +146,7 @@ var cli struct {
 	SaveJSON bool `default:"false" help:"save API request JSON for inspection"`
 	OutputDir string `default:"converted-decks" help:"output directory name"`
 	CompatibilityMode bool `default:"false" help:"apply compatibility formatting for deck list output formats where applicable to help when importing the deck lists into various programs"`
+	Primer string `default:"${PrimerModeDefault}" enum:"${PrimerModes}" help:"how to handle a deck's primer, options: ${PrimerModes}"`
 
 	// subcommands
 	Version Version `cmd:"" help:"Print version information and quit"`
@@ -170,6 +172,8 @@ func main() {
 	"DefaultOutputFilename": "-", // output to stdout by default
 	"DefaultInputSource": string(core.InputMoxfieldURL),
 	"InputSources": InputSources(),
+	"PrimerModeDefault": string(core.PrimerSave),
+	"PrimerModes": PrimerModes(),
   })
 	// initialize logging
   core.ConfigureLogging(cli.Verbose)
@@ -181,6 +185,7 @@ func main() {
 	SaveJSON: cli.SaveJSON,
 	OutputDir: cli.OutputDir,
 	CompatibilityMode: cli.CompatibilityMode,
+	Primer: cli.Primer,
 	})
   ctx.FatalIfErrorf(err)
 }

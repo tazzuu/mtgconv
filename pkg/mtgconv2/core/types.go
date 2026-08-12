@@ -131,6 +131,18 @@ func OutputFormats() []OutputFormat {
 	return []OutputFormat{OutputDCK, OutputJSON, OutputTXT,OutputMoxfieldCollection}
 }
 
+// PrimerMode controls how a deck's primer (long-form guide) is handled.
+// It defaults to PrimerSave; primers are fetched/written unless explicitly skipped.
+type PrimerMode string
+const (
+	PrimerSave PrimerMode = "save" // fetch the primer (if present) and write a .primer.md sidecar
+	PrimerSkip PrimerMode = "skip" // do not fetch or save the primer
+)
+// return all valid primer modes
+func PrimerModes() []PrimerMode {
+	return []PrimerMode{PrimerSave, PrimerSkip}
+}
+
 // sections in a deck list
 type BoardType string
 const (

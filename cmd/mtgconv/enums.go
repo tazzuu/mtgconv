@@ -60,3 +60,11 @@ func SearchAPISources() string {
 	}
 	return strings.Join(out, ",")
 }
+
+func PrimerModes() string {
+	out := []string{}
+	for _, v := range core.PrimerModes() {
+		out = append(out, string(v))
+	}
+	return strings.Join(out, ",")
+}

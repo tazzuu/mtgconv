@@ -11,3 +11,4 @@ var MoxfieldDeckSearchUrl string = "https://api2.moxfield.com/v2/decks/search" /
 var ApiSource core.APISource = core.SourceMoxfield
 // API rate limit 1 query per second for Moxfield (no burst)
 var MoxfieldAPIRateLimiter = rate.NewLimiter(rate.Every(2000*time.Millisecond), 1)
+var MoxfieldPrimerBaseUrl string = "https://api2.moxfield.com/v1/decks" // fetch a deck's primer (markdown)

@@ -13,5 +13,6 @@ func ApplyConfig(ctx Context) core.Config {
 	config.UserAgent = ctx.UserAgent
 	config.CompatibilityMode = ctx.CompatibilityMode
 	config.SaveJSON = ctx.SaveJSON
+	config.Primer = core.PrimerMode(ctx.Primer) // validated against the enum by kong
 	return config
 }

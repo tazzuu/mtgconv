@@ -17,6 +17,7 @@ type Config struct {
 	UrlString      string // user supplied URL to query for decklist
 	AutoFilename bool // automatically create an output filename
 	SaveJSON bool // save a copy of the API response JSON
+	Primer PrimerMode // whether to fetch and save the deck primer (default: save)
 	Build BuildInfo // current build of the program
 }
 
@@ -29,6 +30,7 @@ func DefaultConfig(build BuildInfo) Config {
 		OutputFilename: "auto",
 		AutoFilename: true,
 		OutputFormat: OutputDCK,
+		Primer: PrimerSave,
 		Build: build,
 	}
 }

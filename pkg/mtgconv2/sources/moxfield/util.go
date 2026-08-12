@@ -25,6 +25,12 @@ func MakeMoxfieldAPIUrl(deckID string) string {
 	return (u.String())
 }
 
+func MakeMoxfieldPrimerUrl(shortID string) string {
+	u, _ := url.Parse(MoxfieldPrimerBaseUrl)
+	u.Path = path.Join(u.Path, shortID, "primer")
+	return u.String()
+}
+
 // get the deck ID from the URL provided by the user
 func DeckIDFromURL(rawUrl string) (string, error) {
 	// rawUrl := "https://moxfield.com/decks/Wrcumkgcc0qjIB2bwoDvqQ"

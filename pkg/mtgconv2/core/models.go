@@ -6,6 +6,7 @@ import "time"
 type Deck struct {
 	Meta     DeckMeta `json:"meta"`
 	Sections map[BoardType][]DeckEntry `json:"sections"` // Mainboard, Sideboard, etc.
+	Primer DeckPrimer `json:"primer"`
 }
 
 // method to add an entry to a board, with validations
@@ -66,6 +67,12 @@ type DeckEntry struct {
 	Board    BoardType `json:"board"`
 	Finish   FinishType `json:"finish"`
 	Card     Card `json:"card"`
+}
+
+// a free text primer or usage guide that is included with some decks
+type DeckPrimer struct {
+	Content     string `json:"content"`
+	RetrievedAt time.Time
 }
 
 type Card struct {

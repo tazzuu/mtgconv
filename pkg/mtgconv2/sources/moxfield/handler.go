@@ -96,6 +96,21 @@ func (h Handler) Fetch(ctx context.Context, input string, cfg core.Config, ovrr 
 		deck.Meta.Bracket = ovrr.Bracket
 	}
 
+	// fetch the Primer for this deck, unless the user asked to skip it.
+	// gated on the mode so `--primer skip` avoids the extra API call entirely.
+	if cfg.Primer != core.PrimerSkip && HasPrimer(moxfieldDeck) {
+		// moxfieldDeck.ID is the SHORT id — required by the primer endpoint.
+		primer, err := FetchPrimer(ctx, moxfieldDeck.ID, cfg)
+		if err != nil {
+			return deck, err
+		}
+		deck.Primer = core.DeckPrimer{
+			Content: primer.Content,
+			RetrievedAt: primer.RetrievedAt,
+		}
+	}
+
+
 	return deck, nil
 	// return core.Deck{}, fmt.Errorf("moxfield source handler not implemented")
 }
